@@ -7,10 +7,10 @@ For more information on this file, see
 https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
 """
 
-import os
 
+import os
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'my_quiz_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'my_quiz_app.python_django.settings')
 
 application = get_wsgi_application()

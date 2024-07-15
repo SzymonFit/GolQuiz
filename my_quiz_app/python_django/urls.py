@@ -14,12 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
+from my_quiz_app.python_django.quiz import views  # Poprawny import
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('', include('game.urls'))
+    path('profile/', views.profile, name='profile'),
+    path('search/', views.search_user, name='search_user'),
+    path('challenge/<int:user_id>/', views.challenge_user, name='challenge_user'),
+    path('', views.home, name='home'),  # Dodanie ścieżki głównej
+    path('logout/', views.logout_view, name='logout'),
 ]
-
