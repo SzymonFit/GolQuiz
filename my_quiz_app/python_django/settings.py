@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'my_quiz_app.python_django.quiz',
+    'my_quiz_app.python_django.quiz',  # Dodane tutaj
     'django.contrib.sites',
     'allauth',
     'allauth.account',

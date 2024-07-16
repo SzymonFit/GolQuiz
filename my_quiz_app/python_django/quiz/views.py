@@ -7,12 +7,15 @@ from django.db.models import Q
 from my_quiz_app.python_django.quiz.models import Game, UserProfile, User
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('menu')
+    
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('profile')
+            return redirect('menu')
     else:
         form = AuthenticationForm()
 
@@ -40,3 +43,8 @@ def challenge_user(request, user_id):
     opponent = get_object_or_404(User, id=user_id)
     Game.objects.create(player1=request.user, player2=opponent)
     return redirect('profile')
+
+@login_required
+def menu(request):
+    user = request.user
+    return render(request, 'menu.html', {'user': user})

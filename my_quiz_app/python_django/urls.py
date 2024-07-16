@@ -17,14 +17,9 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from my_quiz_app.python_django.quiz import views  # Poprawny import
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('profile/', views.profile, name='profile'),
-    path('search/', views.search_user, name='search_user'),
-    path('challenge/<int:user_id>/', views.challenge_user, name='challenge_user'),
-    path('', views.home, name='home'),  # Dodanie ścieżki głównej
-    path('logout/', views.logout_view, name='logout'),
+    path('', include('my_quiz_app.python_django.quiz.urls')),  # Włączenie URLs z aplikacji quiz
 ]
