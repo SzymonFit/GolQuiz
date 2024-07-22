@@ -12,10 +12,15 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+env_file = os.path.join(BASE_DIR, '.env')
+if os.path.isfile(env_file):
+    environ.Env.read_env(env_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -38,13 +43,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'my_quiz_app.python_django.quiz',  # Dodane tutaj
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # "users",
+    'my_quiz_app.python_django.home',   
+    'my_quiz_app.python_django.games',  
+    'my_quiz_app.python_django.profiles',   
+    'my_quiz_app.python_django.users',  
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,7 +70,13 @@ ROOT_URLCONF = 'my_quiz_app.python_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'python_django/home/templates'),
+            os.path.join(BASE_DIR, 'python_django/profiles/templates'),
+            os.path.join(BASE_DIR, 'python_django/games/templates'),
+            os.path.join(BASE_DIR, 'python_django/users/templates'),
+            # Dodaj więcej katalogów szablonów, jeśli to konieczne
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +89,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'my_quiz_app.python_django.wsgi.application'
 
+WSGI_APPLICATION = 'my_quiz_app.python_django.wsgi.application'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
