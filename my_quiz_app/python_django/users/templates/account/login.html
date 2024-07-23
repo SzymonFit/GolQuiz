@@ -41,6 +41,30 @@
         form button:hover {
             background-color: #0056b3;
         }
+        .link-container {
+            margin-top: 10px;
+        }
+        .link-container a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .link-container a:hover {
+            text-decoration: underline;
+        }
+        .btn-reset {
+            display: block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-reset:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +75,10 @@
             {{ form.as_p }}
             <button type="submit">Zaloguj się</button>
         </form>
-        <p>Nie masz konta? <a href="{% url 'account_signup' %}">Zarejestruj się tutaj</a></p>
+        <div class="link-container">
+            <p>Nie masz konta? <a href="{% url 'account_signup' %}">Zarejestruj się tutaj</a></p>
+            <a class="btn-reset" href="{% url 'password_reset' %}">Resetuj hasło</a>
+        </div>
     </div>
 </body>
 </html>
