@@ -21,6 +21,9 @@ env_file = os.path.join(BASE_DIR, '.env')
 if os.path.isfile(env_file):
     environ.Env.read_env(env_file)
 
+API_KEY = env('API_KEY')
+API_HOST = env('API_HOST')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -51,6 +54,7 @@ INSTALLED_APPS = [
     'my_quiz_app.python_django.games',  
     'my_quiz_app.python_django.profiles',   
     'my_quiz_app.python_django.users',  
+    'my_quiz_app.python_django.menu',
 ]
 
 
@@ -75,6 +79,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'python_django/profiles/templates'),
             os.path.join(BASE_DIR, 'python_django/games/templates'),
             os.path.join(BASE_DIR, 'python_django/users/templates'),
+            os.path.join(BASE_DIR, 'python_django/menu/templates'),
             # Dodaj więcej katalogów szablonów, jeśli to konieczne
         ],
         'APP_DIRS': True,
