@@ -39,14 +39,20 @@ def top_scorers():
         # {"league":"135","season":"2022"}, # Serie A
         # {"league":"135","season":"2023"}, # Serie A
         # {"league":"135","season":"2024"}, # Serie A
+        
+        {"league":"78","season":"2019"}, # Bundesliga
+        {"league":"78","season":"2020"}, # Bundesliga
+        {"league":"78","season":"2021"}, # Bundesliga
+        {"league":"78","season":"2022"}, # Bundesliga
+        {"league":"78","season":"2023"}, # Bundesliga
 
 
     ]
-
     headers = {
-        "x-rapidapi-key": settings.API_KEY,
-        "x-rapidapi-host": settings.API_HOST
+        "x-rapidapi-key": "3825b3e53emsh4ba6a20476bca5ep1b8733jsn95fb7df95694",
+        "x-rapidapi-host": "api-football-v1.p.rapidapi.com"
     }
+
     all_data = []
 
     for query in queries:
@@ -56,7 +62,7 @@ def top_scorers():
         all_data.append(data)  # Dodanie danych do listy all_data
     
     # Zapisanie wszystkich danych do jednego pliku JSON
-    with open('top_scorers.json', 'w') as file:
+    with open('top_scorers2.json', 'w') as file:
         json.dump(all_data, file, indent=4)
 
 
@@ -75,7 +81,7 @@ def decode_unicode(data):
         return data
 
 # Ścieżka do pliku JSON
-file_path = 'top_scorers.json'
+file_path = 'top_scorers2.json'
 
 # Wczytanie danych z pliku JSON
 with open(file_path, 'r', encoding='utf-8') as file:

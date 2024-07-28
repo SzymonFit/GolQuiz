@@ -71,7 +71,7 @@
 <body>
     <div class="menu-container">
         <h2>Menu Gier</h2>
-        <button class="menu-button" onclick="openModal('game-mode-1')">Tryb gry 1</button>
+        <button class="menu-button" onclick="openModal('game-mode-1')">Goal Hunter</button>
         <button class="menu-button" onclick="openModal('game-mode-2')">Tryb gry 2</button>
         <button class="menu-button" onclick="openModal('game-mode-3')">Tryb gry 3</button>
         <a class="menu-button" href="{% url 'profile' %}">Profil</a>
@@ -81,9 +81,9 @@
     <div id="game-mode-1" class="modal">
         <div class="modal-content">
             <h2>Wybierz opcję</h2>
-            <button class="menu-button" onclick="location.href='{% url "game_solo" 1 %}'">Zagraj sam</button>
-            <button class="menu-button" onclick="location.href='{% url "game_random" 1 %}'">Wyszukaj losowo przeciwnika</button>
-            <button class="menu-button" onclick="location.href='{% url "game_search" 1 %}'">Wyszukaj po loginie</button>
+            <a class="menu-button" href="{% url 'create_game_solo' %}">Zagraj sam</a>
+            <a class="menu-button" href="{% url 'create_game_random' %}">Wyszukaj losowo przeciwnika</a>
+            <a class="menu-button" href="{% url 'create_game_search' %}">Wyszukaj po loginie</a>
             <button class="close-button" onclick="closeModal('game-mode-1')">Zamknij</button>
         </div>
     </div>
@@ -91,9 +91,9 @@
     <div id="game-mode-2" class="modal">
         <div class="modal-content">
             <h2>Wybierz opcję</h2>
-            <button class="menu-button" onclick="location.href='{% url "game_solo" 2 %}'">Zagraj sam</button>
-            <button class="menu-button" onclick="location.href='{% url "game_random" 2 %}'">Wyszukaj losowo przeciwnika</button>
-            <button class="menu-button" onclick="location.href='{% url "game_search" 2 %}'">Wyszukaj po loginie</button>
+            <a class="menu-button" href="{% url 'create_game_solo' %}">Zagraj sam</a>
+            <a class="menu-button" href="{% url 'create_game_random' %}">Wyszukaj losowo przeciwnika</a>
+            <a class="menu-button" href="{% url 'create_game_search' %}">Wyszukaj po loginie</a>
             <button class="close-button" onclick="closeModal('game-mode-2')">Zamknij</button>
         </div>
     </div>
@@ -101,9 +101,9 @@
     <div id="game-mode-3" class="modal">
         <div class="modal-content">
             <h2>Wybierz opcję</h2>
-            <button class="menu-button" onclick="location.href='{% url "game_solo" 3 %}'">Zagraj sam</button>
-            <button class="menu-button" onclick="location.href='{% url "game_random" 3 %}'">Wyszukaj losowo przeciwnika</button>
-            <button class="menu-button" onclick="location.href='{% url "game_search" 3 %}'">Wyszukaj po loginie</button>
+            <a class="menu-button" href="{% url 'create_game_solo' %}">Zagraj sam</a>
+            <a class="menu-button" href="{% url 'create_game_random' %}">Wyszukaj losowo przeciwnika</a>
+            <a class="menu-button" href="{% url 'create_game_search' %}">Wyszukaj po loginie</a>
             <button class="close-button" onclick="closeModal('game-mode-3')">Zamknij</button>
         </div>
     </div>

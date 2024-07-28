@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            overflow: hidden; /* Zapobiega przewijaniu całego ekranu */
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-height: 90vh; /* Maksymalna wysokość kontenera */
+            overflow-y: auto; /* Przewijanie w pionie, jeśli zawartość jest zbyt duża */
+            width: 80%; /* Szerokość kontenera */
+        }
+        .container h1, .container h2 {
+            margin: 0 0 20px 0;
+        }
+        .container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .container li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .container .menu-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .container .menu-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Game Summary</h1>
+        <p>ID Gry: {{ game.id }}</p>
+        <p>Data rozpoczęcia: {{ game.start_time }}</p>
+        <p>Data zakończenia: {{ game.end_time }}</p>
+        <p>Twój wynik: {{ game.score_player1 }}</p>
+
+        <h2>Questions</h2>
+        <ul>
+        {% for question in game.questions %}
+            <li>
+                <strong>Question:</strong> {{ question.question }}<br>
+                <strong>Your Answer:</strong> {{ question.user_answer }}<br>
+                <strong>Correct Answer:</strong> {{ question.correct_answer }}<br>
+                <strong>Correct:</strong> {{ question.is_correct }}<br>
+            </li>
+        {% endfor %}
+        </ul>
+        <a href="{% url 'menu' %}" class="menu-button">Powrót do Menu</a>
+    </div>
+</body>
+</html>

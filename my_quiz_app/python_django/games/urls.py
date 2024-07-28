@@ -1,9 +1,11 @@
-# my_quiz_app/python_django/games/urls.py
 from django.urls import path
-from . import views as games_views
+from . import views
 
 urlpatterns = [
-    path('solo/<int:mode>/', games_views.game_solo, name='game_solo'),
-    path('random/<int:mode>/', games_views.game_random, name='game_random'),
-    path('search/<int:mode>/', games_views.game_search, name='game_search'),
+    path('solo/create/', views.create_game_solo, name='create_game_solo'),
+    path('solo/detail/<int:game_id>/', views.game_solo_detail, name='game_solo_detail'),
+    path('random/create/', views.create_game_random, name='create_game_random'),
+    path('random/detail/<int:game_id>/', views.game_random_detail, name='game_random_detail'),
+    path('search/create/', views.create_game_search, name='create_game_search'),
+    path('search/detail/<int:game_id>/', views.game_search_detail, name='game_search_detail'),
 ]

@@ -3,10 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gra Solo</title>
+    <title>Game Solo</title>
 </head>
 <body>
     <h1>Gra Solo</h1>
-    <p>Tryb: {{ mode }}</p>
+    <p>ID Gry: {{ game.id }}</p>
+    <p>Tryb: Solo</p>
+    <p>Data rozpoczęcia: {{ game.start_time }}</p>
+
+    <h2>Question 
+        {% with question_num=game.questions_answered|add:1 %}
+            {{ question_num }}/10
+        {% endwith %}
+    </h2>
+    <p>{{ question.question }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="answer" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Dodajemy poprawną odpowiedź do testów -->
+    <div style="margin-top: 20px;">
+        <strong>Poprawna odpowiedź:</strong> {{ question.correct_answer }}
+    </div>
 </body>
 </html>

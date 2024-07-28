@@ -2,14 +2,32 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Game(models.Model):
-    player1 = models.ForeignKey(User, related_name='game_player1', on_delete=models.CASCADE)
-    player2 = models.ForeignKey(User, related_name='game_player2', on_delete=models.CASCADE, null=True, blank=True)
+class GameBase(models.Model):
+    player1 = models.ForeignKey(User, related_name='%(class)s_player1', on_delete=models.CASCADE)
     score_player1 = models.IntegerField(default=0)
-    score_player2 = models.IntegerField(default=0)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True, blank=True)
-    mode = models.IntegerField(default=0)
+    questions_answered = models.IntegerField(default=0)
+    questions = models.JSONField(default=list)
+    answers = models.JSONField(default=list)
+
+    class Meta:
+        abstract = True
+
+class GameSolo(GameBase):
+    is_solo = models.BooleanField(default=True)
 
     def __str__(self):
-        return f'Game {self.id} - {self.player1} vs {self.player2}'
+        return f'Solo Game {self.id} - {self.player1}'
+
+class GameRandom(GameBase):
+    player2 = models.ForeignKey(User, related_name='game_random_player2', on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f'Random Game {self.id} - {self.player1} vs {self.player2}'
+
+class GameSearch(GameBase):
+    player2 = models.ForeignKey(User, related_name='game_search_player2', on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f'Search Game {self.id} - {self.player1} vs {self.player2}'
