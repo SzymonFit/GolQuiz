@@ -49,10 +49,9 @@ def top_scorers():
 
     ]
     headers = {
-        "x-rapidapi-key": "3825b3e53emsh4ba6a20476bca5ep1b8733jsn95fb7df95694",
-        "x-rapidapi-host": "api-football-v1.p.rapidapi.com"
+        "x-rapidapi-key": settings.API_KEY,
+        "x-rapidapi-host": settings.API_HOST
     }
-
     all_data = []
 
     for query in queries:

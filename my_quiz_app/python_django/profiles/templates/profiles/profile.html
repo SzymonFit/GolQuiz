@@ -52,6 +52,7 @@
         <p>Wygrane: {{ profile.wins }}</p>
         <p>Przegrane: {{ profile.losses }}</p>
         <p>Remisy: {{ profile.draws }}</p>
+        <p>Zagrane gry solo: {{ profile.solo_games_played }}</p>
         <a class="button" href="{% url 'account_logout' %}">Wyloguj się</a>
         <a class="button" href="{% url 'menu' %}">Wróć do menu</a>
     </div>

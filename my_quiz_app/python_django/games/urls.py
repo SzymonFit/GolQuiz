@@ -8,4 +8,5 @@ urlpatterns = [
     path('random/detail/<int:game_id>/', views.game_random_detail, name='game_random_detail'),
     path('search/create/', views.create_game_search, name='create_game_search'),
     path('search/detail/<int:game_id>/', views.game_search_detail, name='game_search_detail'),
+    path('solo/summary/<int:game_id>/', views.game_solo_summary, name='game_solo_summary'),
 ]
