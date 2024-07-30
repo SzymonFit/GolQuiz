@@ -22,13 +22,11 @@ def leagues_by_country_name():
     }
     for query in queries:
         response = requests.get(url, headers=headers, params=query)
-        data = response.json()  # Otrzymanie danych w formacie JSON
+        data = response.json()
         print(data)
         
-        # Utworzenie nazwy pliku na podstawie nazwy ligi
         file_name = f"leagues_by_country_{query['country']}_{query['name'].replace(' ', '')}.json"
-        
-        # Zapisanie danych do pliku JSON
+
         with open(file_name, 'w') as file:
             json.dump(data, file, indent=4)
 

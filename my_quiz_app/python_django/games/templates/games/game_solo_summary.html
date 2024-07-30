@@ -13,57 +13,43 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            flex-direction: column;
-            overflow: hidden; /* Zapobiega przewijaniu całego ekranu */
         }
-        .container {
+        .summary-container {
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-height: 90vh; /* Maksymalna wysokość kontenera */
-            overflow-y: auto; /* Przewijanie w pionie, jeśli zawartość jest zbyt duża */
-            width: 80%; /* Szerokość kontenera */
+            overflow-y: auto;
+            max-height: 90vh;
         }
-        .container h1, .container h2 {
-            margin: 0 0 20px 0;
+        .summary-container h2 {
+            margin-top: 0;
         }
-        .container ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .container li {
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-        .container .menu-button {
+        .summary-button {
             display: inline-block;
             padding: 10px 20px;
-            margin-top: 20px;
+            margin-top: 10px;
             border-radius: 5px;
             background-color: #007bff;
             color: #fff;
             text-decoration: none;
             cursor: pointer;
         }
-        .container .menu-button:hover {
+        .summary-button:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Game Summary</h1>
+    <div class="summary-container">
+        <h2>Game Summary</h2>
         <p>ID Gry: {{ game.id }}</p>
         <p>Data rozpoczęcia: {{ game.start_time }}</p>
         <p>Data zakończenia: {{ game.end_time }}</p>
         <p>Twój wynik: {{ game.score_player1 }}</p>
 
-        <h2>Questions</h2>
+        <h3>Questions</h3>
         <ul>
         {% for question in game.questions %}
             <li>
@@ -74,7 +60,7 @@
             </li>
         {% endfor %}
         </ul>
-        <a href="{% url 'menu' %}" class="menu-button">Powrót do Menu</a>
+        <a class="summary-button" href="{% url 'menu' %}">Powrót do menu</a>
     </div>
 </body>
 </html>

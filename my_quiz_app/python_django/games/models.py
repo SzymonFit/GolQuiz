@@ -10,6 +10,7 @@ class GameBase(models.Model):
     questions_answered = models.IntegerField(default=0)
     questions = models.JSONField(default=list)
     answers = models.JSONField(default=list)
+    game_mode = models.CharField(max_length=20)
 
     class Meta:
         abstract = True

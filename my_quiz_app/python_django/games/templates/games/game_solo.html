@@ -20,11 +20,21 @@
 
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="answer" required>
+        {% if question.options %}
+            {% for option in question.options %}
+                <input type="radio" name="answer" value="{{ option }}" id="{{ option }}">
+                <label for="{{ option }}">{{ option }}</label><br>
+            {% endfor %}
+        {% elif question.correct_answer and 'position' in question.correct_answer %}
+            <label for="position">Position:</label>
+            <input type="text" id="position" name="position" required><br>
+            <label for="number">Number:</label>
+            <input type="text" id="number" name="number" required><br>
+        {% else %}
+            <input type="text" name="answer" id="answer" required>
+        {% endif %}
         <button type="submit">Submit</button>
     </form>
-
-    <!-- Dodajemy poprawną odpowiedź do testów -->
     <div style="margin-top: 20px;">
         <strong>Poprawna odpowiedź:</strong> {{ question.correct_answer }}
     </div>
