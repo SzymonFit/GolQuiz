@@ -118,7 +118,6 @@
 
     <script>
         let currentGameId = null;
-        let socket = null;
 
         function openModal(id) {
             document.getElementById(id).style.display = 'flex';
@@ -138,35 +137,17 @@
                     } else if (data.game_id) {
                         currentGameId = data.game_id;  // Store the game ID for canceling
                         document.getElementById('game-id-debug').textContent = `Game ID: ${currentGameId}`;  // Debug output
-                        setupWebSocket(currentGameId);
+                        const socket = new WebSocket(`ws://${window.location.host}/ws/game/${currentGameId}/`);
+                        socket.onmessage = function(event) {
+                            const data = JSON.parse(event.data);
+                            if (data.message === 'opponent_joined') {
+                                window.location.href = `/games/random/detail/${currentGameId}/`;
+                            }
+                        };
                     } else if (data.message) {
                         alert(data.message);
                     }
                 });
-        }
-
-        function setupWebSocket(gameId) {
-            socket = new WebSocket('ws://' + window.location.host + '/ws/game/' + gameId + '/');
-
-            socket.onopen = function(e) {
-                console.log('WebSocket połączony.');
-            };
-
-            socket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                console.log('Otrzymano wiadomość:', data);
-                if (data.message === 'opponent_joined') {
-                    window.location.href = `/games/random/detail/${gameId}/`;
-                }
-            };
-
-            socket.onerror = function(e) {
-                console.error('WebSocket błąd:', e);
-            };
-
-            socket.onclose = function(e) {
-                console.log('WebSocket zamknięty.');
-            };
         }
 
         function cancelWaiting() {
@@ -178,10 +159,6 @@
                         closeModal('waiting-modal');
                         currentGameId = null;  // Reset the game ID
                         document.getElementById('game-id-debug').textContent = '';  // Clear debug output
-                        if (socket) {
-                            socket.close();
-                            socket = null;
-                        }
                     });
             } else {
                 closeModal('waiting-modal');

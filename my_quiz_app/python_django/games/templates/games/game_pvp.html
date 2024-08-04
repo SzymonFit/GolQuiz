@@ -15,19 +15,6 @@
 
     {% if waiting_message %}
         <h2>Proszę czekać na drugiego gracza...</h2>
-        <script>
-            const gameId = "{{ game.id }}";
-            const socket = new WebSocket(
-                'ws://' + window.location.host + '/ws/game/' + gameId + '/'
-            );
-
-            socket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                if (data.message === 'game_ended') {
-                    window.location.href = '/games/random/summary/' + gameId + '/';
-                }
-            };
-        </script>
     {% else %}
         <h2>Pytanie 
             {% with question_num=game.questions_answered|add:1 %}
@@ -63,5 +50,19 @@
     <p>Gracz 2: {{ game.player2.username }}</p>
     <p>Wynik Gracza 1: {{ game.score_player1 }}</p>
     <p>Wynik Gracza 2: {{ game.score_player2 }}</p>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(event) {
+            const gameId = "{{ game.id }}";
+            const socket = new WebSocket(`ws://${window.location.host}/ws/game/${gameId}/`);
+
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                if (data.message === 'game_ended') {
+                    window.location.href = `/games/random/summary/${gameId}/`;
+                }
+            };
+        });
+    </script>
 </body>
 </html>

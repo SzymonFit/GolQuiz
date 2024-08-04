@@ -1,22 +1,21 @@
-from django.utils import timezone
+import random
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .models import GameSolo, GameRandom, GameSearch
-from my_quiz_app.python_django.profiles.models import UserProfile
-from .questions import get_random_question, check_answer, load_questions, generate_question
-import random
-import logging
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from .models import GameSolo, GameRandom, GameSearch
+from .questions import get_random_question, check_answer, load_questions, generate_question
+from my_quiz_app.python_django.profiles.models import UserProfile
 
 logger = logging.getLogger(__name__)
 
 @login_required
 def create_game_solo(request, game_mode):
     game = GameSolo.objects.create(player1=request.user, game_mode=game_mode)
-    
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     profile.solo_games_played += 1
     profile.save()
@@ -73,32 +72,12 @@ def create_game_random(request, game_mode):
     if existing_game:
         existing_game.player2 = request.user
         existing_game.save()
-        # Generate questions for both players if not already generated
+        # Ustaw pytania, jeśli jeszcze nie są ustawione
         if not existing_game.questions:
             questions = [get_random_question(game_mode) for _ in range(10)]
             existing_game.questions = questions
             existing_game.save()
-            logger.debug(f'Set questions for game {existing_game.id}')
-        return JsonResponse({'redirect_url': f'/games/random/detail/{existing_game.id}/'})
-    else:
-        game = GameRandom.objects.create(player1=request.user, game_mode=game_mode)
-        # Generate questions for both players
-        questions = [get_random_question(game_mode) for _ in range(10)]
-        game.questions = questions
-        game.save()
-        logger.debug(f'Set questions for new game {game.id}')
-        return JsonResponse({'message': 'Waiting for an opponent...', 'game_id': game.id})
-
-@login_required
-def join_game_random(request, game_mode):
-    logger.debug(f"User {request.user.username} is trying to join a random game in mode {game_mode}")
-
-    # Find an existing game where player2 is null and exclude games where the user is already player1 or player2
-    existing_game = GameRandom.objects.filter(player2__isnull=True, game_mode=game_mode).exclude(player1=request.user).exclude(player2=request.user).first()
-
-    if existing_game:
-        existing_game.player2 = request.user
-        existing_game.save()
+        # Notify both players to start the game
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             f'game_{existing_game.id}',
@@ -107,13 +86,44 @@ def join_game_random(request, game_mode):
                 'message': 'opponent_joined'
             }
         )
-        logger.debug(f"User {request.user.username} joined game ID {existing_game.id} as player2")
         return JsonResponse({'redirect_url': f'/games/random/detail/{existing_game.id}/'})
     else:
-        # Create a new game with the current user as player1
         game = GameRandom.objects.create(player1=request.user, game_mode=game_mode)
+        # Generate questions when creating a new game
+        questions = [get_random_question(game_mode) for _ in range(10)]
+        game.questions = questions
+        game.save()
+        return JsonResponse({'message': 'Waiting for an opponent...', 'game_id': game.id})
+
+
+@login_required
+def join_game_random(request, game_mode):
+    logger.debug(f"User {request.user.username} is trying to join a random game in mode {game_mode}")
+
+    existing_game = GameRandom.objects.filter(player2__isnull=True, game_mode=game_mode).exclude(player1=request.user).exclude(player2=request.user).first()
+
+    if existing_game:
+        existing_game.player2 = request.user
+        existing_game.save()
+        logger.debug(f"User {request.user.username} joined game ID {existing_game.id} as player2")
+        # Notify both players to start the game
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'game_{existing_game.id}',
+            {
+                'type': 'game_message',
+                'message': 'opponent_joined'
+            }
+        )
+        return JsonResponse({'redirect_url': f'/games/random/detail/{existing_game.id}/'})
+    else:
+        game = GameRandom.objects.create(player1=request.user, game_mode=game_mode)
+        questions = [get_random_question(game_mode) for _ in range(10)]
+        game.questions = questions
+        game.save()
         logger.debug(f"User {request.user.username} created a new game ID {game.id} as player1")
-        return JsonResponse({'redirect_url': f'/games/random/detail/{game.id}/'})
+        return JsonResponse({'message': 'Waiting for an opponent...', 'game_id': game.id})
+
 
 @login_required
 def cancel_game_random(request, game_id):
@@ -124,19 +134,6 @@ def cancel_game_random(request, game_id):
         return JsonResponse({'message': 'Game canceled'})
     return JsonResponse({'message': 'Cannot cancel the game'})
 
-from django.http import JsonResponse
-from django.utils import timezone
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import GameRandom
-from .questions import get_random_question, check_answer
-import logging
-
-logger = logging.getLogger(__name__)
-
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-
 @login_required
 def game_random_detail(request, game_id):
     game = get_object_or_404(GameRandom, id=game_id)
@@ -145,16 +142,10 @@ def game_random_detail(request, game_id):
         return redirect('menu')
 
     if game.player2 is None:
-        return render(request, 'games/game_pvp.html', {'game': game, 'waiting_message': 'Proszę czekać na drugiego gracza...'})
+        return JsonResponse({'message': 'Waiting for an opponent...'})
 
-    if not game.questions:
-        questions = [get_random_question(game.game_mode) for _ in range(10)]
-        game.questions = questions
-        game.save()
-        logger.debug(f'Ustawiono pytania dla gry {game.id}')
-    
     questions = game.questions
-    
+
     if request.user == game.player1:
         current_question = questions[game.questions_answered_player1] if game.questions_answered_player1 < len(questions) else None
     else:
@@ -166,26 +157,21 @@ def game_random_detail(request, game_id):
         answer = request.POST.get('answer')
         if current_question:
             is_correct = check_answer(current_question, answer)
+            question_data = {
+                'question': current_question['question'],
+                'correct_answer': current_question['correct_answer'],
+                'user_answer': answer,
+                'is_correct': is_correct,
+                'player': 'player1' if request.user == game.player1 else 'player2'
+            }
             if request.user == game.player1:
                 game.questions_answered_player1 += 1
-                game.questions.append({
-                    'question': current_question['question'],
-                    'correct_answer': current_question['correct_answer'],
-                    'user_answer': answer,
-                    'is_correct': is_correct,
-                    'player': 'player1'
-                })
+                game.questions.append(question_data)
                 if is_correct:
                     game.score_player1 += 1
             else:
                 game.questions_answered_player2 += 1
-                game.questions.append({
-                    'question': current_question['question'],
-                    'correct_answer': current_question['correct_answer'],
-                    'user_answer': answer,
-                    'is_correct': is_correct,
-                    'player': 'player2'
-                })
+                game.questions.append(question_data)
                 if is_correct:
                     game.score_player2 += 1
             
@@ -211,6 +197,8 @@ def game_random_detail(request, game_id):
         return redirect('game_random_detail', game_id=game.id)
 
     return render(request, 'games/game_pvp.html', {'game': game, 'question': current_question})
+
+
 
 @login_required
 def create_game_search(request, game_mode):
@@ -275,6 +263,7 @@ def game_random_summary(request, game_id):
         'player1_questions': player1_questions,
         'player2_questions': player2_questions,
     })
+
 
 @login_required
 def game_search_summary(request, game_id):
