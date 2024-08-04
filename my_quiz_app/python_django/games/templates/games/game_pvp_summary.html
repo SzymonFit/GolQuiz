@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .summary-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+        .summary-container h2 {
+            margin-top: 0;
+        }
+        .summary-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .summary-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="summary-container">
+        <h2>Game Summary</h2>
+        <p>ID Gry: {{ game.id }}</p>
+        <p>Data rozpoczęcia: {{ game.start_time }}</p>
+        <p>Data zakończenia: {{ game.end_time }}</p>
+        <p>Wynik Gracza 1: {{ game.score_player1 }}</p>
+        <p>Wynik Gracza 2: {{ game.score_player2 }}</p>
+
+        <h3>Result</h3>
+        <p>{{ result }}</p>
+
+        <h3>Questions Player 1</h3>
+        <ul>
+            {% for q in player1_questions %}
+                <li>
+                    <strong>Question:</strong> {{ q.question }}<br>
+                    <strong>Your Answer:</strong> {{ q.user_answer }}<br>
+                    <strong>Correct Answer:</strong> {{ q.correct_answer }}<br>
+                    <strong>Correct:</strong> {{ q.is_correct }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h3>Questions Player 2</h3>
+        <ul>
+            {% for q in player2_questions %}
+                <li>
+                    <strong>Question:</strong> {{ q.question }}<br>
+                    <strong>Your Answer:</strong> {{ q.user_answer }}<br>
+                    <strong>Correct Answer:</strong> {{ q.correct_answer }}<br>
+                    <strong>Correct:</strong> {{ q.is_correct }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <a class="summary-button" href="{% url 'menu' %}">Powrót do menu</a>
+    </div>
+</body>
+</html>

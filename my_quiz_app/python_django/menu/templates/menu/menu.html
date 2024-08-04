@@ -82,7 +82,7 @@
         <div class="modal-content">
             <h2>Wybierz opcję</h2>
             <a class="menu-button" href="{% url 'create_game_solo' 'mode1' %}">Zagraj sam</a>
-            <a class="menu-button" href="{% url 'create_game_random' 'mode1' %}">Wyszukaj losowo przeciwnika</a>
+            <a class="menu-button" href="javascript:void(0);" onclick="searchRandomOpponent('mode1')">Wyszukaj losowo przeciwnika</a>
             <a class="menu-button" href="{% url 'create_game_search' 'mode1' %}">Wyszukaj po loginie</a>
             <button class="close-button" onclick="closeModal('game-mode-1')">Zamknij</button>
         </div>
@@ -92,7 +92,7 @@
         <div class="modal-content">
             <h2>Wybierz opcję</h2>
             <a class="menu-button" href="{% url 'create_game_solo' 'mode2' %}">Zagraj sam</a>
-            <a class="menu-button" href="{% url 'create_game_random' 'mode2' %}">Wyszukaj losowo przeciwnika</a>
+            <a class="menu-button" href="javascript:void(0);" onclick="searchRandomOpponent('mode2')">Wyszukaj losowo przeciwnika</a>
             <a class="menu-button" href="{% url 'create_game_search' 'mode2' %}">Wyszukaj po loginie</a>
             <button class="close-button" onclick="closeModal('game-mode-2')">Zamknij</button>
         </div>
@@ -102,19 +102,90 @@
         <div class="modal-content">
             <h2>Wybierz opcję</h2>
             <a class="menu-button" href="{% url 'create_game_solo' 'mode3' %}">Zagraj sam</a>
-            <a class="menu-button" href="{% url 'create_game_random' 'mode3' %}">Wyszukaj losowo przeciwnika</a>
+            <a class="menu-button" href="javascript:void(0);" onclick="searchRandomOpponent('mode3')">Wyszukaj losowo przeciwnika</a>
             <a class="menu-button" href="{% url 'create_game_search' 'mode3' %}">Wyszukaj po loginie</a>
             <button class="close-button" onclick="closeModal('game-mode-3')">Zamknij</button>
         </div>
     </div>
 
+    <div id="waiting-modal" class="modal">
+        <div class="modal-content">
+            <h2>Proszę czekać, czekamy na drugiego gracza...</h2>
+            <p id="game-id-debug"></p>  <!-- Debug output for game ID -->
+            <button class="close-button" onclick="cancelWaiting()">Anuluj</button>
+        </div>
+    </div>
+
     <script>
+        let currentGameId = null;
+        let socket = null;
+
         function openModal(id) {
             document.getElementById(id).style.display = 'flex';
         }
 
         function closeModal(id) {
             document.getElementById(id).style.display = 'none';
+        }
+
+        function searchRandomOpponent(gameMode) {
+            openModal('waiting-modal');
+            fetch(`/games/random/join/${gameMode}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    } else if (data.game_id) {
+                        currentGameId = data.game_id;  // Store the game ID for canceling
+                        document.getElementById('game-id-debug').textContent = `Game ID: ${currentGameId}`;  // Debug output
+                        setupWebSocket(currentGameId);
+                    } else if (data.message) {
+                        alert(data.message);
+                    }
+                });
+        }
+
+        function setupWebSocket(gameId) {
+            socket = new WebSocket('ws://' + window.location.host + '/ws/game/' + gameId + '/');
+
+            socket.onopen = function(e) {
+                console.log('WebSocket połączony.');
+            };
+
+            socket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                console.log('Otrzymano wiadomość:', data);
+                if (data.message === 'opponent_joined') {
+                    window.location.href = `/games/random/detail/${gameId}/`;
+                }
+            };
+
+            socket.onerror = function(e) {
+                console.error('WebSocket błąd:', e);
+            };
+
+            socket.onclose = function(e) {
+                console.log('WebSocket zamknięty.');
+            };
+        }
+
+        function cancelWaiting() {
+            if (currentGameId) {
+                fetch(`/games/random/cancel/${currentGameId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        closeModal('waiting-modal');
+                        currentGameId = null;  // Reset the game ID
+                        document.getElementById('game-id-debug').textContent = '';  // Clear debug output
+                        if (socket) {
+                            socket.close();
+                            socket = null;
+                        }
+                    });
+            } else {
+                closeModal('waiting-modal');
+            }
         }
     </script>
 </body>

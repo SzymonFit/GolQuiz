@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game PvP</title>
+</head>
+<body>
+    <h1>Gra PvP</h1>
+    <p>ID Gry: {{ game.id }}</p>
+    <p>Tryb: PvP</p>
+    <p>Data rozpoczęcia: {{ game.start_time }}</p>
+    <p>Gracz 1: {{ game.player1.username }}</p>
+    <p>Gracz 2: {{ game.player2.username }}</p>
+
+    {% if waiting_message %}
+        <h2>Proszę czekać na drugiego gracza...</h2>
+        <script>
+            const gameId = "{{ game.id }}";
+            const socket = new WebSocket(
+                'ws://' + window.location.host + '/ws/game/' + gameId + '/'
+            );
+
+            socket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                if (data.message === 'game_ended') {
+                    window.location.href = '/games/random/summary/' + gameId + '/';
+                }
+            };
+        </script>
+    {% else %}
+        <h2>Pytanie 
+            {% with question_num=game.questions_answered|add:1 %}
+                {{ question_num }}/10
+            {% endwith %}
+        </h2>
+        <p>{{ question.question }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {% if question.options %}
+                {% for option in question.options %}
+                    <input type="radio" name="answer" value="{{ option }}" id="{{ option }}">
+                    <label for="{{ option }}">{{ option }}</label><br>
+                {% endfor %}
+            {% elif question.correct_answer and 'position' in question.correct_answer %}
+                <label for="position">Position:</label>
+                <input type="text" id="position" name="position" required><br>
+                <label for="number">Number:</label>
+                <input type="text" id="number" name="number" required><br>
+            {% else %}
+                <input type="text" name="answer" id="answer" required>
+            {% endif %}
+            <button type="submit">Wyślij</button>
+        </form>
+        <div style="margin-top: 20px;">
+            <strong>Poprawna odpowiedź:</strong> {{ question.correct_answer }}
+        </div>
+    {% endif %}
+
+    <h3>Wynik:</h3>
+    <p>Gracz 1: {{ game.player1.username }}</p>
+    <p>Gracz 2: {{ game.player2.username }}</p>
+    <p>Wynik Gracza 1: {{ game.score_player1 }}</p>
+    <p>Wynik Gracza 2: {{ game.score_player2 }}</p>
+</body>
+</html>
