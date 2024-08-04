@@ -74,23 +74,19 @@ def create_game_random(request, game_mode):
         existing_game.player2 = request.user
         existing_game.save()
         # Generate questions for both players if not already generated
-        if not request.session.get(f'game_{existing_game.id}_player1_questions'):
+        if not existing_game.questions:
             questions = [get_random_question(game_mode) for _ in range(10)]
-            request.session[f'game_{existing_game.id}_player1_questions'] = questions
-            request.session[f'game_{existing_game.id}_player2_questions'] = questions
+            existing_game.questions = questions
+            existing_game.save()
             logger.debug(f'Set questions for game {existing_game.id}')
-            logger.debug(f"Generated Questions Player 1: {request.session[f'game_{existing_game.id}_player1_questions']}")
-            logger.debug(f"Generated Questions Player 2: {request.session[f'game_{existing_game.id}_player2_questions']}")
         return JsonResponse({'redirect_url': f'/games/random/detail/{existing_game.id}/'})
     else:
         game = GameRandom.objects.create(player1=request.user, game_mode=game_mode)
         # Generate questions for both players
         questions = [get_random_question(game_mode) for _ in range(10)]
-        request.session[f'game_{game.id}_player1_questions'] = questions
-        request.session[f'game_{game.id}_player2_questions'] = questions
+        game.questions = questions
+        game.save()
         logger.debug(f'Set questions for new game {game.id}')
-        logger.debug(f"Generated Questions Player 1: {request.session[f'game_{game.id}_player1_questions']}")
-        logger.debug(f"Generated Questions Player 2: {request.session[f'game_{game.id}_player2_questions']}")
         return JsonResponse({'message': 'Waiting for an opponent...', 'game_id': game.id})
 
 @login_required
@@ -103,8 +99,15 @@ def join_game_random(request, game_mode):
     if existing_game:
         existing_game.player2 = request.user
         existing_game.save()
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'game_{existing_game.id}',
+            {
+                'type': 'game_message',
+                'message': 'opponent_joined'
+            }
+        )
         logger.debug(f"User {request.user.username} joined game ID {existing_game.id} as player2")
-        logger.debug(f"Session data for game {existing_game.id}: Player 1 Questions: {request.session.get(f'game_{existing_game.id}_player1_questions')}, Player 2 Questions: {request.session.get(f'game_{existing_game.id}_player2_questions')}")
         return JsonResponse({'redirect_url': f'/games/random/detail/{existing_game.id}/'})
     else:
         # Create a new game with the current user as player1
@@ -142,14 +145,15 @@ def game_random_detail(request, game_id):
         return redirect('menu')
 
     if game.player2 is None:
-        return JsonResponse({'message': 'Waiting for an opponent...'})
+        return render(request, 'games/game_pvp.html', {'game': game, 'waiting_message': 'Proszę czekać na drugiego gracza...'})
 
-    if not request.session.get(f'game_{game.id}_questions'):
+    if not game.questions:
         questions = [get_random_question(game.game_mode) for _ in range(10)]
-        request.session[f'game_{game.id}_questions'] = questions
+        game.questions = questions
+        game.save()
         logger.debug(f'Ustawiono pytania dla gry {game.id}')
     
-    questions = request.session.get(f'game_{game.id}_questions', [])
+    questions = game.questions
     
     if request.user == game.player1:
         current_question = questions[game.questions_answered_player1] if game.questions_answered_player1 < len(questions) else None
@@ -208,8 +212,6 @@ def game_random_detail(request, game_id):
 
     return render(request, 'games/game_pvp.html', {'game': game, 'question': current_question})
 
-
-
 @login_required
 def create_game_search(request, game_mode):
     if request.method == 'POST':
@@ -264,8 +266,8 @@ def game_random_summary(request, game_id):
     else:
         result = "It's a tie!"
 
-    player1_questions = [q for q in game.questions if q['player'] == 'player1']
-    player2_questions = [q for q in game.questions if q['player'] == 'player2']
+    player1_questions = [q for q in game.questions if q.get('player') == 'player1']
+    player2_questions = [q for q in game.questions if q.get('player') == 'player2']
 
     return render(request, 'games/game_pvp_summary.html', {
         'game': game,
@@ -286,4 +288,3 @@ def game_search_summary(request, game_id):
         result = "It's a tie!"
 
     return render(request, 'games/game_pvp_summary.html', {'game': game, 'result': result})
-#dziala
