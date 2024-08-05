@@ -4,5 +4,4 @@ from . import views
 
 urlpatterns = [
     path('', views.menu, name='menu'),
-    path('challenge/<int:user_id>/', views.challenge_user, name='challenge_user'),
 ]

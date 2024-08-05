@@ -10,7 +10,4 @@ urlpatterns = [
     path('random/cancel/<int:game_id>/', views.cancel_game_random, name='cancel_game_random'),
     path('random/join/<str:game_mode>/', views.join_game_random, name='join_game_random'),
     path('random/summary/<int:game_id>/', views.game_random_summary, name='game_random_summary'),
-    path('search/create/<str:game_mode>/', views.create_game_search, name='create_game_search'),
-    path('search/detail/<int:game_id>/', views.game_search_detail, name='game_search_detail'),
-    path('search/summary/<int:game_id>/', views.game_search_summary, name='game_search_summary'),
 ]

@@ -49,10 +49,27 @@
         <p>Login: {{ request.user.username }}</p>
         <p>Email: {{ request.user.email }}</p>
         <p>Zagrane gry: {{ total_games }}</p>
-        <p>Wygrane: {{ profile.wins }}</p>
-        <p>Przegrane: {{ profile.losses }}</p>
-        <p>Remisy: {{ profile.draws }}</p>
+        <h3>Gry Solo</h3>
         <p>Zagrane gry solo: {{ profile.solo_games_played }}</p>
+        <p>Punkty w trybie 1: {{ profile.solo_points_mode1 }}</p>
+        <p>Punkty w trybie 2: {{ profile.solo_points_mode2 }}</p>
+        <p>Punkty w trybie 3: {{ profile.solo_points_mode3 }}</p>
+        <h3>Gry PvP</h3>
+        <h4>Tryb 1</h4>
+        <p>Wygrane: {{ profile.pvp_wins_mode1 }}</p>
+        <p>Przegrane: {{ profile.pvp_losses_mode1 }}</p>
+        <p>Remisy: {{ profile.pvp_draws_mode1 }}</p>
+        <p>Punkty: {{ profile.pvp_points_mode1 }}</p>
+        <h4>Tryb 2</h4>
+        <p>Wygrane: {{ profile.pvp_wins_mode2 }}</p>
+        <p>Przegrane: {{ profile.pvp_losses_mode2 }}</p>
+        <p>Remisy: {{ profile.pvp_draws_mode2 }}</p>
+        <p>Punkty: {{ profile.pvp_points_mode2 }}</p>
+        <h4>Tryb 3</h4>
+        <p>Wygrane: {{ profile.pvp_wins_mode3 }}</p>
+        <p>Przegrane: {{ profile.pvp_losses_mode3 }}</p>
+        <p>Remisy: {{ profile.pvp_draws_mode3 }}</p>
+        <p>Punkty: {{ profile.pvp_points_mode3 }}</p>
         <a class="button" href="{% url 'account_logout' %}">Wyloguj się</a>
         <a class="button" href="{% url 'menu' %}">Wróć do menu</a>
     </div>
