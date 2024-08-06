@@ -83,7 +83,7 @@
             <h2>Wybierz opcję</h2>
             <a class="menu-button" href="{% url 'create_game_solo' 'mode1' %}">Zagraj sam</a>
             <a class="menu-button" href="javascript:void(0);" onclick="searchRandomOpponent('mode1')">Wyszukaj losowo przeciwnika</a>
-
+            <a class="menu-button" href="{% url 'ranking_view' 'mode1' %}">Ranking Goal Hunter</a>
             <button class="close-button" onclick="closeModal('game-mode-1')">Zamknij</button>
         </div>
     </div>
@@ -93,7 +93,7 @@
             <h2>Wybierz opcję</h2>
             <a class="menu-button" href="{% url 'create_game_solo' 'mode2' %}">Zagraj sam</a>
             <a class="menu-button" href="javascript:void(0);" onclick="searchRandomOpponent('mode2')">Wyszukaj losowo przeciwnika</a>
-
+            <a class="menu-button" href="{% url 'ranking_view' 'mode2' %}">Ranking Squad Master</a>
             <button class="close-button" onclick="closeModal('game-mode-2')">Zamknij</button>
         </div>
     </div>
@@ -103,7 +103,7 @@
             <h2>Wybierz opcję</h2>
             <a class="menu-button" href="{% url 'create_game_solo' 'mode3' %}">Zagraj sam</a>
             <a class="menu-button" href="javascript:void(0);" onclick="searchRandomOpponent('mode3')">Wyszukaj losowo przeciwnika</a>
-
+            <a class="menu-button" href="{% url 'ranking_view' 'mode3' %}">Ranking I can take both</a>
             <button class="close-button" onclick="closeModal('game-mode-3')">Zamknij</button>
         </div>
     </div>

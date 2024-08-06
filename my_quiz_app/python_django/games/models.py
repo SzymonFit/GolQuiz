@@ -24,6 +24,8 @@ class GameRandom(GameBase):
     player2 = models.ForeignKey(User, related_name='game_random_player2', on_delete=models.CASCADE, null=True, blank=True)
     score_player2 = models.IntegerField(default=0)
     questions_answered = models.IntegerField(default=0)
+    points_updated = models.BooleanField(default=False)
+    
 
     def __str__(self):
         return f'Random Game {self.id} - {self.player1} vs {self.player2}'

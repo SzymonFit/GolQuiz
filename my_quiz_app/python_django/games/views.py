@@ -282,6 +282,7 @@ def game_random_summary(request, game_id):
     profile1.save()
     profile2.save()
 
+    game.points_updated = True
     player1_questions = [q for q in game.questions if q.get('player') == 'player1']
     player2_questions = [q for q in game.questions if q.get('player') == 'player2']
 

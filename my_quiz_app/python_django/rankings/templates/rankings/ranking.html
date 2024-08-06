@@ -1,0 +1,145 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking {{ game_mode }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .search-bar input[type="text"] {
+            width: calc(100% - 44px);
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .search-bar button {
+            padding: 8px 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+        .search-bar button:hover {
+            background-color: #0056b3;
+        }
+        .search-bar .clear-button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 8px 16px;
+            border: none;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+        .search-bar .clear-button:hover {
+            background-color: #c82333;
+        }
+        .user-position {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .back-button {
+            margin-bottom: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+        }
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'menu' %}" class="back-button">Powrót do menu</a>
+        <h2>Ranking {{ game_mode }}</h2>
+        <div class="user-position">
+            {% if user_position %}
+                Jesteś na miejscu: {{ user_position }}
+            {% else %}
+                Nie jesteś w rankingu.
+            {% endif %}
+        </div>
+        <div class="search-bar">
+            <form method="GET" id="search-form">
+                <input type="text" name="q" id="search-input" placeholder="Szukaj użytkownika..." value="{{ request.GET.q }}">
+                <button type="submit">Szukaj</button>
+                <button type="button" class="clear-button" onclick="clearSearch()">X</button>
+            </form>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Miejsce</th>
+                    <th>Użytkownik</th>
+                    <th>Punkty</th>
+                    <th>Wygrane</th>
+                    <th>Przegrane</th>
+                    <th>Remisy</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.position }}</td>
+                        <td>{{ user.user.username }}</td>
+                        <td>{{ user|attr:points_field }}</td>
+                        <td>{{ user|attr:wins_field }}</td>
+                        <td>{{ user|attr:losses_field }}</td>
+                        <td>{{ user|attr:draws_field }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-form').submit();
+        }
+    </script>
+</body>
+</html>
