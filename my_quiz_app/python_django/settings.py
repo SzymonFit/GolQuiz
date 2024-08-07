@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'my_quiz_app.python_django.menu',
     'my_quiz_app.python_django.rankings',
     'my_quiz_app.python_django.rankings.templatetags.custom_filters',
+    'rest_framework',
 ]
 ASGI_APPLICATION = 'my_quiz_app.python_django.asgi.application'
 

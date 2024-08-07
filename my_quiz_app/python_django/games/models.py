@@ -29,9 +29,3 @@ class GameRandom(GameBase):
 
     def __str__(self):
         return f'Random Game {self.id} - {self.player1} vs {self.player2}'
-
-class GameSearch(GameBase):
-    player2 = models.ForeignKey(User, related_name='game_search_player2', on_delete=models.CASCADE, null=True, blank=True)
-
-    def __str__(self):
-        return f'Search Game {self.id} - {self.player1} vs {self.player2}'
