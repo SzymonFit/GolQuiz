@@ -1,18 +1,22 @@
-# api_views.py
-from rest_framework import viewsets, permissions
-from rest_framework.decorators import action
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import UserProfile
 from .serializers import UserProfileSerializer
-from django.contrib.auth.models import User
 
-class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['get'], url_path='me', url_name='me')
-    def get_profile(self, request):
-        profile = self.get_queryset().get(user=request.user)
-        serializer = self.get_serializer(profile)
-        return Response(serializer.data)
+    def get(self, request):
+        profile = request.user.userprofile
+        total_games = (
+            profile.pvp_wins_mode1 + profile.pvp_losses_mode1 + profile.pvp_draws_mode1 +
+            profile.pvp_wins_mode2 + profile.pvp_losses_mode2 + profile.pvp_draws_mode2 +
+            profile.pvp_wins_mode3 + profile.pvp_losses_mode3 + profile.pvp_draws_mode3 + profile.solo_games_played
+        )
+
+        serializer = UserProfileSerializer(profile)
+        data = serializer.data
+        data['total_games'] = total_games
+
+        return Response(data)
