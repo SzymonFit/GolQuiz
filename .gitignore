@@ -28,6 +28,8 @@ all_json's/
 
 # Node
 my_quiz_app/angular_frontend/node_modules/
+my_quiz_app/angular_frontend/.angular/
+
 
 npm-debug.log
 yarn-error.log
