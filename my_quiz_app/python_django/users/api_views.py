@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth import login as auth_login, logout, authenticate
+from django.contrib.auth import login as auth_login, logout, authenticate, login
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
