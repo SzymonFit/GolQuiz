@@ -1,0 +1,20 @@
+<div class="container">
+  <h1>GolQuiz</h1>
+  <div id="description" class="description">{{ currentDescription }}</div>
+
+  <!-- Formularz logowania -->
+  <div class="login-form">
+    <input [(ngModel)]="username" placeholder="Login" type="text" />
+    <input [(ngModel)]="password" placeholder="Hasło" type="password" />
+    <button (click)="login()">Zaloguj się</button>
+  </div>
+
+  <!-- Komunikat o błędzie -->
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <!-- Opcje autoryzacji -->
+  <div class="auth-options">
+    <button routerLink="/accounts/signup">Sign Up</button>
+    <button routerLink="/accounts/password/reset">Forgot Password?</button>
+  </div>
+</div>

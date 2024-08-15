@@ -1,0 +1,19 @@
+<!-- <h1>Gra Solo</h1>
+<p>ID Gry: {{ game.id }}</p>
+<p>Tryb: Solo</p>
+<p>Data rozpoczęcia: {{ game.start_time }}</p>
+
+<h2>Pytanie {{ currentQuestionIndex + 1 }}/10</h2>
+<p>{{ currentQuestion?.question }}</p>
+
+<form (ngSubmit)="submitAnswer()">
+  <div *ngIf="currentQuestion?.options">
+    <div *ngFor="let option of currentQuestion.options">
+      <input type="radio" [value]="option" name="answer" [(ngModel)]="userAnswer">{{ option }}
+    </div>
+  </div>
+  <div *ngIf="!currentQuestion?.options">
+    <input type="text" [(ngModel)]="userAnswer" name="answer">
+  </div>
+  <button type="submit">Wyślij</button>
+</form> -->

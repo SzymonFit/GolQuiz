@@ -4,6 +4,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import CustomUserCreationForm
 from django.contrib.auth import views as auth_views
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import JsonResponse
 
 def signup(request):
     if request.method == 'POST':
@@ -42,3 +44,8 @@ def password_reset_confirm(request, uidb64=None, token=None):
 
 def password_reset_complete(request):
     return auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html')(request)
+
+
+@ensure_csrf_cookie
+def set_csrf_token(request):
+    return JsonResponse({'detail': 'CSRF cookie set'})

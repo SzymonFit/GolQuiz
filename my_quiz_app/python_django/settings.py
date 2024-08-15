@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 import environ
+import logging
+from corsheaders.defaults import default_headers
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent 
@@ -59,8 +62,19 @@ INSTALLED_APPS = [
     'my_quiz_app.python_django.rankings',
     'my_quiz_app.python_django.rankings.templatetags.custom_filters',
     'rest_framework',
+    'corsheaders',
 ]
 ASGI_APPLICATION = 'my_quiz_app.python_django.asgi.application'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 CHANNEL_LAYERS = {
     'default': {
@@ -69,6 +83,36 @@ CHANNEL_LAYERS = {
 }
 import os
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'my_quiz_app': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+
+
+
+logger = logging.getLogger('django.security.csrf')
+logger.setLevel(logging.DEBUG)
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
@@ -119,8 +163,37 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',    
 ]
 
+CSRF_COOKIE_DOMAIN = 'localhost'
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:4200',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-CSRFToken',
+]
+
+CORS_EXPOSE_HEADERS = [
+    'X-CSRFToken',
+]
+
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'  # lub 'None' w zależności od potrzeb
+CSRF_COOKIE_SECURE = False
+
+
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'my_quiz_app.python_django.urls'
 
 TEMPLATES = [

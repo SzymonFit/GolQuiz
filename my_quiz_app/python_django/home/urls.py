@@ -4,5 +4,5 @@ from .api_views import HomeView
 
 urlpatterns = [
     path('', home, name='home'),
-    path('api/home/', HomeView.as_view(), name='api_home'),
+    path('home/', HomeView.as_view(), name='api_home'),
 ]

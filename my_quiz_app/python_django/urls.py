@@ -25,6 +25,7 @@ from my_quiz_app.python_django.profiles import views as profiles_views
 from my_quiz_app.python_django.games import views as games_views
 from my_quiz_app.python_django.menu import views as menu_views
 from my_quiz_app.python_django.rankings import views as rankings_views
+from my_quiz_app.python_django.users.urls import api_urlpatterns as users_api_urls
 
 
 
@@ -40,4 +41,7 @@ urlpatterns = [
     path('menu/', include('my_quiz_app.python_django.menu.urls')), 
     path('games/', include('my_quiz_app.python_django.games.urls')),
     path('ranking/', include('my_quiz_app.python_django.rankings.urls')),
+    path('api/', include('my_quiz_app.python_django.home.urls')),
+    path('api/', include(users_api_urls)),
 ]
+
