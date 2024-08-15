@@ -27,7 +27,7 @@ all_json's/
 /bazel-out
 
 # Node
-/node_modules
+GolQuiz/my_quiz_app/angular_frontend/node_modules/
 npm-debug.log
 yarn-error.log
 
