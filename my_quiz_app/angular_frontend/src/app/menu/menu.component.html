@@ -3,7 +3,7 @@
   <button class="menu-button" (click)="openGameModal('mode1')">Goal Hunter</button>
   <button class="menu-button" (click)="openGameModal('mode2')">Squad Master</button>
   <button class="menu-button" (click)="openGameModal('mode3')">I can take both</button>
-  <a class="menu-button" routerLink="/profile">Profil</a>
+  <button class="menu-button" (click)="goToProfile()">Przejdź do Profilu (API)</button>
 </div>
 
 <!-- Modals -->
@@ -12,7 +12,7 @@
     <h2>Wybierz opcję</h2>
     <button class="menu-button" (click)="startSoloGame('mode1')">Zagraj sam</button>
     <button class="menu-button" (click)="startPvpGame('mode1')">Wyszukaj losowo przeciwnika</button>
-    <a class="menu-button" routerLink="/ranking/mode1">Ranking Goal Hunter</a>
+    <button class="menu-button" (click)="goToRanking('mode1')">Ranking Goal Hunter</button>
     <button class="close-button" (click)="closeModal()">Zamknij</button>
   </div>
 </div>
@@ -22,7 +22,7 @@
     <h2>Wybierz opcję</h2>
     <button class="menu-button" (click)="startSoloGame('mode2')">Zagraj sam</button>
     <button class="menu-button" (click)="startPvpGame('mode2')">Wyszukaj losowo przeciwnika</button>
-    <a class="menu-button" routerLink="/ranking/mode2">Ranking Squad Master</a>
+    <button class="menu-button" (click)="goToRanking('mode2')">Ranking Squad Master</button>
     <button class="close-button" (click)="closeModal()">Zamknij</button>
   </div>
 </div>
@@ -32,7 +32,7 @@
     <h2>Wybierz opcję</h2>
     <button class="menu-button" (click)="startSoloGame('mode3')">Zagraj sam</button>
     <button class="menu-button" (click)="startPvpGame('mode3')">Wyszukaj losowo przeciwnika</button>
-    <a class="menu-button" routerLink="/ranking/mode3">Ranking I can take both</a>
+    <button class="menu-button" (click)="goToRanking('mode3')">Ranking I can take both</button>
     <button class="close-button" (click)="closeModal()">Zamknij</button>
   </div>
 </div>

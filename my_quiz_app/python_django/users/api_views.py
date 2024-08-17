@@ -148,3 +148,10 @@ class PasswordResetCompleteView(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({"detail": "Password reset complete."}, status=status.HTTP_200_OK)
+    
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+        return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)

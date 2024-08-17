@@ -1,0 +1,26 @@
+<div class="container">
+  <h2>Ranking dla trybu {{ gameMode }}</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Miejsce</th>
+        <th>Użytkownik</th>
+        <th>Punkty</th>
+        <th>Wygrane</th>
+        <th>Przegrane</th>
+        <th>Remisy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of rankings">
+        <td>{{ user.position }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user['pvp_points_' + gameMode] }}</td>
+        <td>{{ user['pvp_wins_' + gameMode] }}</td>
+        <td>{{ user['pvp_losses_' + gameMode] }}</td>
+        <td>{{ user['pvp_draws_' + gameMode] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

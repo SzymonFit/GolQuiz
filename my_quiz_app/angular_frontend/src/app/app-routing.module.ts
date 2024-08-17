@@ -15,6 +15,9 @@ import { PasswordResetFormComponent } from './users/password-reset-form/password
 import { PasswordResetDoneComponent } from './users/password-reset-done/password-reset-done.component';
 import { PasswordResetConfirmComponent } from './users/password-reset-confirm/password-reset-confirm.component';
 import { PasswordResetCompleteComponent } from './users/password-reset-complete/password-reset-complete.component';
+import { ProfileComponent } from './profiles/profile.component';
+import { RankingListComponent } from './rankings/ranking-list/ranking-list.component';
+
 
 
 export const routes: Routes = [
@@ -29,7 +32,9 @@ export const routes: Routes = [
   { path: 'accounts/password/reset', component: PasswordResetFormComponent },
   { path: 'accounts/password/reset/done', component: PasswordResetDoneComponent },
   { path: 'api/accounts/reset/:uid/:token', component: PasswordResetConfirmComponent },
-  { path: 'password-reset-complete', component: PasswordResetCompleteComponent },
+  { path: 'accounts/password/reset/complete', component: PasswordResetCompleteComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'ranking/:mode', component: RankingListComponent },
 ];
 
 @NgModule({

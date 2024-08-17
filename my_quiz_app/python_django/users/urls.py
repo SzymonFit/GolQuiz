@@ -7,6 +7,8 @@ from .views import set_csrf_token
 from .api_views import SetCsrfTokenView
 from .api_views import PasswordResetView
 from .api_views import PasswordResetConfirmView
+from .api_views import PasswordResetCompleteView
+from .api_views import LogoutView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
@@ -29,7 +31,9 @@ api_urlpatterns = [
     path('accounts/password/reset/', PasswordResetView.as_view(), name='api_password_reset'),
     path('accounts/password/reset/done/', views.password_reset_done, name='api_password_reset_done'),
     path('accounts/reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='api_password_reset_confirm'),
-    path('accounts/password/reset/done/', views.password_reset_complete, name='api_password_reset_complete'),
+    path('accounts/reset/done/', PasswordResetCompleteView.as_view(), name='api_password_reset_complete'),
     path('accounts/set-csrf/', SetCsrfTokenView.as_view(), name='api_set_csrf'),
     path('accounts/', include(router.urls)),
+    path("accounts/logout/", LogoutView.as_view(), name="api_logout"),
+
 ]

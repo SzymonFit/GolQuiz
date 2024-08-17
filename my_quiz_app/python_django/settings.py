@@ -189,6 +189,7 @@ CSRF_USE_SESSIONS = False
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'  # lub 'None' w zależności od potrzeb
 CSRF_COOKIE_SECURE = False
+APPEND_SLASH = True
 
 
 CSRF_COOKIE_NAME = "csrftoken"

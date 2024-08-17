@@ -26,6 +26,8 @@ from my_quiz_app.python_django.games import views as games_views
 from my_quiz_app.python_django.menu import views as menu_views
 from my_quiz_app.python_django.rankings import views as rankings_views
 from my_quiz_app.python_django.users.urls import api_urlpatterns as users_api_urls
+from my_quiz_app.python_django.profiles.urls import api_urlpatterns as profiles_api_urls
+from my_quiz_app.python_django.rankings.urls import api_urlpatterns as rankings_api_urls
 
 
 
@@ -42,6 +44,8 @@ urlpatterns = [
     path('games/', include('my_quiz_app.python_django.games.urls')),
     path('ranking/', include('my_quiz_app.python_django.rankings.urls')),
     path('api/', include('my_quiz_app.python_django.home.urls')),
-    path('api/', include(users_api_urls)),
+    path('api/', include(users_api_urls)),  # Ścieżki API dla użytkowników
+    path('api/', include(profiles_api_urls)),  # Ścieżki API dla profilu,
+    path('api/', include(rankings_api_urls)),  # Ścieżka API dla rankingu
 ]
 

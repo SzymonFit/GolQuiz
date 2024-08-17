@@ -2,11 +2,15 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+import { CommonModule } from '@angular/common'; 
+import { RouterModule } from '@angular/router'; 
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
+  standalone: true,
+  imports: [CommonModule, RouterModule] 
 })
 export class MenuComponent {
   currentGameMode: string | null = null;
@@ -62,5 +66,13 @@ export class MenuComponent {
   private openWebSocket(gameId: string): WebSocketSubject<any> {
     const url = `ws://${window.location.host}/ws/game/${gameId}/`;
     return webSocket(url);
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
+  }
+
+  goToRanking(gameMode: string) {
+    this.router.navigate([`/ranking/${gameMode}`]); // Przekierowanie na stronę rankingu
   }
 }

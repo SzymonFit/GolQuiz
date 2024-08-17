@@ -1,0 +1,42 @@
+<div *ngIf="profile; else loading">
+  <h2>Profil użytkownika</h2>
+  <p>Login: {{ profile.user.username }}</p>
+  <p>Email: {{ profile.user.email }}</p>
+  <p>Zagrane gry: {{ profile.total_games }}</p>
+
+  <h3>Gry Solo</h3>
+  <p>Zagrane gry solo: {{ profile.solo_games_played }}</p>
+  <p>Punkty w trybie 1: {{ profile.solo_points_mode1 }}</p>
+  <p>Punkty w trybie 2: {{ profile.solo_points_mode2 }}</p>
+  <p>Punkty w trybie 3: {{ profile.solo_points_mode3 }}</p>
+
+  <h3>Gry PvP</h3>
+  <h4>Tryb 1</h4>
+  <p>Wygrane: {{ profile.pvp_wins_mode1 }}</p>
+  <p>Przegrane: {{ profile.pvp_losses_mode1 }}</p>
+  <p>Remisy: {{ profile.pvp_draws_mode1 }}</p>
+  <p>Punkty: {{ profile.pvp_points_mode1 }}</p>
+
+  <h4>Tryb 2</h4>
+  <p>Wygrane: {{ profile.pvp_wins_mode2 }}</p>
+  <p>Przegrane: {{ profile.pvp_losses_mode2 }}</p>
+  <p>Remisy: {{ profile.pvp_draws_mode2 }}</p>
+  <p>Punkty: {{ profile.pvp_points_mode2 }}</p>
+
+  <h4>Tryb 3</h4>
+  <p>Wygrane: {{ profile.pvp_wins_mode3 }}</p>
+  <p>Przegrane: {{ profile.pvp_losses_mode3 }}</p>
+  <p>Remisy: {{ profile.pvp_draws_mode3 }}</p>
+  <p>Punkty: {{ profile.pvp_points_mode3 }}</p>
+
+  <button class="button" (click)="logout()">Wyloguj się</button>
+  <button class="button" (click)="goToMenu()">Wróć do menu</button>
+</div>
+
+<ng-template #loading>
+  <p>Loading profile...</p>
+</ng-template>
+
+<div *ngIf="error">
+  <p>Error: {{ error }}</p>
+</div>
