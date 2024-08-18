@@ -1,19 +1,51 @@
-<!-- <h1>Gra Solo</h1>
-<p>ID Gry: {{ game.id }}</p>
-<p>Tryb: Solo</p>
-<p>Data rozpoczęcia: {{ game.start_time }}</p>
+<div *ngIf="game && currentQuestion">
+  <h2>{{ game.game_mode }}</h2>
+  <h3>Question {{ questions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}</h3>
 
-<h2>Pytanie {{ currentQuestionIndex + 1 }}/10</h2>
-<p>{{ currentQuestion?.question }}</p>
+  <!-- Wyświetlanie logo drużyny, jeśli jest dostępne -->
+  <div *ngIf="currentQuestion.team_logo" style="margin-bottom: 10px;">
+    <img [src]="currentQuestion.team_logo" alt="Team Logo" width="100">
+  </div>
 
-<form (ngSubmit)="submitAnswer()">
-  <div *ngIf="currentQuestion?.options">
+  <!-- Wyświetlanie logo ligi, jeśli jest dostępne -->
+  <div *ngIf="currentQuestion.league_logo" style="margin-bottom: 10px;">
+    <img [src]="currentQuestion.league_logo" alt="League Logo" width="100">
+  </div>
+
+  <!-- Wyświetlanie zdjęcia piłkarza, jeśli jest dostępne -->
+  <div *ngIf="currentQuestion.player_photo" style="margin-bottom: 10px;">
+    <img [src]="currentQuestion.player_photo" alt="Player Photo" width="100">
+  </div>
+
+  <p>{{ currentQuestion.question }}</p>
+
+  <!-- Wyświetlanie opcji odpowiedzi -->
+  <div *ngIf="currentQuestion.options && currentQuestion.options.length > 0; else textAnswer">
     <div *ngFor="let option of currentQuestion.options">
-      <input type="radio" [value]="option" name="answer" [(ngModel)]="userAnswer">{{ option }}
+      <input 
+        type="radio" 
+        [(ngModel)]="answer" 
+        [value]="option" 
+        [id]="option">
+      <label [for]="option">{{ option }}</label><br>
     </div>
   </div>
-  <div *ngIf="!currentQuestion?.options">
-    <input type="text" [(ngModel)]="userAnswer" name="answer">
+
+  <!-- Jeśli nie ma opcji, wyświetl pole tekstowe -->
+  <ng-template #textAnswer>
+    <input type="text" [(ngModel)]="answer" id="answer" name="answer" required>
+  </ng-template>
+
+  <!-- Komunikat o błędzie, jeśli nie wpisano odpowiedzi lub nie wybrano opcji -->
+  <div *ngIf="showError" style="color: red;">
+    Please select or enter an answer before submitting.
   </div>
-  <button type="submit">Wyślij</button>
-</form> -->
+
+  <button (click)="submitAnswer()">Submit</button>
+
+  <div *ngIf="showCorrectAnswer" style="margin-top: 20px;">
+    <p>Correct Answer: {{ currentQuestion.correct_answer }}</p>
+    <button *ngIf="!isLastQuestion && showCorrectAnswer" (click)="nextQuestion()">Next Question</button>
+    <button *ngIf="isLastQuestion && showCorrectAnswer" (click)="finishGame()">Finish Game</button>
+  </div>
+</div>

@@ -17,7 +17,16 @@ logger = logging.getLogger(__name__)
 class GameSoloViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
-    def create(self, request, game_mode=None):
+    def create(self, request):
+        # Logowanie nagłówków
+        logger.debug(f"Request headers: {request.headers}")
+        logger.debug(f"CSRF token from request: {request.META.get('HTTP_X_CSRFTOKEN')}")
+        logger.debug(f"Session ID from request: {request.session.session_key}")
+
+        game_mode = request.data.get('game_mode')
+        if not game_mode:
+            return Response({"error": "game_mode is required"}, status=status.HTTP_400_BAD_REQUEST)
+
         game = GameSolo.objects.create(player1=request.user, game_mode=game_mode)
         profile, created = UserProfile.objects.get_or_create(user=request.user)
         profile.solo_games_played += 1
@@ -31,24 +40,37 @@ class GameSoloViewSet(viewsets.ViewSet):
         else:
             return Response({"error": "Invalid game mode"}, status=status.HTTP_400_BAD_REQUEST)
 
-        request.session['game_solo_questions'] = random_questions
+        game.questions = random_questions
+        game.save()
+
         logger.debug(f"Generated Questions for Solo Game: {random_questions}")
 
         return Response({"game_id": game.id}, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
         game = get_object_or_404(GameSolo, id=pk)
-        questions = request.session.get('game_solo_questions', [])
-        current_question = questions[game.questions_answered_player1] if game.questions_answered_player1 < len(questions) else None
 
+        # Logowanie nagłówków
+        logger.debug(f"Request headers: {request.headers}")
+        logger.debug(f"CSRF token from request: {request.META.get('HTTP_X_CSRFTOKEN')}")
+        logger.debug(f"Session ID from request: {request.session.session_key}")
+
+        logger.debug(f"Request user: {request.user}, Game player1: {game.player1}")
+
+        if request.user != game.player1:
+            logger.warning(f"Unauthorized access attempt by {request.user} for game {pk}")
+            return Response({"error": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
+        
+        logger.info(f"Authorized access by {request.user} for game {pk}")
         return Response({
             "game": GameSoloSerializer(game).data,
-            "question": current_question
+            "questions": game.questions
         })
+
 
     def update(self, request, pk=None):
         game = get_object_or_404(GameSolo, id=pk)
-        questions = request.session.get('game_solo_questions', [])
+        questions = game.questions
         current_question = questions[game.questions_answered_player1] if game.questions_answered_player1 < len(questions) else None
 
         answer = request.data.get('answer')
@@ -84,6 +106,7 @@ class GameSoloViewSet(viewsets.ViewSet):
                 return Response({"message": "Answer recorded", "question": questions[game.questions_answered_player1]})
         
         return Response({"error": "Invalid state"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class GameRandomViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -262,12 +285,12 @@ class GameSummaryViewSet(viewsets.ViewSet):
                     profile1.pvp_draws_mode2 += 1
                     profile1.pvp_points_mode2 += game.score_player1
                     profile2.pvp_draws_mode2 += 1
-                    profile2.pvp_points_mode2 += game.score_player2
+                    profile2.pvp.points_mode2 += game.score_player2
                 elif game_mode == 'mode3':
                     profile1.pvp_draws_mode3 += 1
-                    profile1.pvp_points_mode3 += game.score_player1
-                    profile2.pvp_draws_mode3 += 1
-                    profile2.pvp_points_mode3 += game.score_player2
+                    profile1.pvp.points_mode3 += game.score_player1
+                    profile2.pvp.draws_mode3 += 1
+                    profile2.pvp.points_mode3 += game.score_player2
 
             profile1.save()
             profile2.save()
@@ -278,4 +301,3 @@ class GameSummaryViewSet(viewsets.ViewSet):
             "game": GameRandomSerializer(game).data if game_type == 'random' else GameSoloSerializer(game).data,
             "result": result,
         })
-

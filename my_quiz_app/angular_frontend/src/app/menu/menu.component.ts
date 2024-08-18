@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common'; 
 import { RouterModule } from '@angular/router'; 
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 @Component({
   selector: 'app-menu',
@@ -16,6 +16,7 @@ export class MenuComponent {
   currentGameMode: string | null = null;
   waitingForOpponent: boolean = false;
   currentGameId: string | null = null;
+  questions: any[] = [];
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -29,35 +30,86 @@ export class MenuComponent {
   }
 
   startSoloGame(gameMode: string) {
-    this.router.navigate([`/game-solo/${gameMode}`]);
+    const headers = this.getHeaders();
+
+    this.http.post(`http://localhost:8000/api/games/solo/`, { game_mode: gameMode }, { headers, withCredentials: true })
+      .subscribe((data: any) => {
+        this.currentGameId = data.game_id;
+        this.fetchQuestions();
+        this.router.navigate([`/game-solo/${this.currentGameId}`], { state: { questions: this.questions } });
+      }, error => {
+        console.error("Error during game creation:", error);
+      });
+  }
+
+  fetchQuestions() {
+    if (this.currentGameId) {
+      const headers = this.getHeaders();
+
+      this.http.get(`http://localhost:8000/api/games/solo/${this.currentGameId}/`, { headers, withCredentials: true })
+        .subscribe((data: any) => {
+          this.questions = data.questions;
+          console.log(this.questions);
+        }, error => {
+          console.error("Error fetching questions:", error);
+        });
+    }
+  }
+
+  private getCsrfTokenFromCookie(): string | null {
+    const name = 'csrftoken=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i].trim();
+      if (c.indexOf(name) === 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return null;
+  }
+
+  private getHeaders(): HttpHeaders {
+    const csrfToken = this.getCsrfTokenFromCookie();
+    return new HttpHeaders().set('X-CSRFToken', csrfToken || '');
   }
 
   startPvpGame(gameMode: string) {
     this.waitingForOpponent = true;
-    this.http.get(`/api/games/random/join/${gameMode}/`).subscribe((data: any) => {
-      if (data.redirect_url) {
-        this.router.navigateByUrl(data.redirect_url);
-      } else if (data.game_id) {
-        this.currentGameId = data.game_id;
-        const socket$ = this.openWebSocket(data.game_id);
-        socket$.subscribe((message: any) => {
-          if (message.message === 'opponent_joined') {
-            this.router.navigate([`/game-pvp/${this.currentGameId}`]);
-          }
-        });
-      } else if (data.message) {
-        alert(data.message);
-      }
-    });
+    const headers = this.getHeaders();
+
+    this.http.get(`/api/games/random/join/${gameMode}/`, { headers, withCredentials: true })
+      .subscribe((data: any) => {
+        if (data.redirect_url) {
+          this.router.navigateByUrl(data.redirect_url);
+        } else if (data.game_id) {
+          this.currentGameId = data.game_id;
+          const socket$ = this.openWebSocket(data.game_id);
+          socket$.subscribe((message: any) => {
+            if (message.message === 'opponent_joined') {
+              this.router.navigate([`/game-pvp/${this.currentGameId}`]);
+            }
+          });
+        } else if (data.message) {
+          alert(data.message);
+        }
+      }, error => {
+        console.error("Error during PvP game creation:", error);
+      });
   }
 
   cancelWaiting() {
     if (this.currentGameId) {
-      this.http.get(`/api/games/random/cancel/${this.currentGameId}/`).subscribe((data: any) => {
-        alert(data.message);
-        this.closeModal();
-        this.currentGameId = null;
-      });
+      const headers = this.getHeaders();
+
+      this.http.get(`/api/games/random/cancel/${this.currentGameId}/`, { headers, withCredentials: true })
+        .subscribe((data: any) => {
+          alert(data.message);
+          this.closeModal();
+          this.currentGameId = null;
+        }, error => {
+          console.error("Error during game cancellation:", error);
+        });
     } else {
       this.closeModal();
     }
@@ -73,6 +125,6 @@ export class MenuComponent {
   }
 
   goToRanking(gameMode: string) {
-    this.router.navigate([`/ranking/${gameMode}`]); // Przekierowanie na stronę rankingu
+    this.router.navigate([`/ranking/${gameMode}`]);
   }
 }

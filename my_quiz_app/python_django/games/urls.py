@@ -1,13 +1,7 @@
-# urls.py
 from django.urls import path, include
 from . import views
-from rest_framework.routers import DefaultRouter
-from .api_views import GameSoloViewSet, GameRandomViewSet, GameSummaryViewSet
 
-router = DefaultRouter()
-router.register(r'solo', GameSoloViewSet, basename='solo')
-router.register(r'random', GameRandomViewSet, basename='random')
-router.register(r'summary', GameSummaryViewSet, basename='summary')
+from .api_views import GameSoloViewSet, GameRandomViewSet, GameSummaryViewSet
 
 urlpatterns = [
     path('solo/create/<str:game_mode>/', views.create_game_solo, name='create_game_solo'),
@@ -18,5 +12,31 @@ urlpatterns = [
     path('random/cancel/<int:game_id>/', views.cancel_game_random, name='cancel_game_random'),
     path('random/join/<str:game_mode>/', views.join_game_random, name='join_game_random'),
     path('random/summary/<int:game_id>/', views.game_random_summary, name='game_random_summary'),
-    path('api/games/', include(router.urls)),
+]
+
+api_urlpatterns = [
+    path('games/solo/', GameSoloViewSet.as_view({
+        'post': 'create'
+    })),
+    path('games/solo/<int:pk>/', GameSoloViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update'
+    })),
+    path('games/random/', GameRandomViewSet.as_view({
+        'post': 'create'
+    })),
+    path('games/random/<int:pk>/', GameRandomViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'delete': 'destroy'
+    })),
+    path('games/random/join/<str:game_mode>/', GameRandomViewSet.as_view({
+        'get': 'create'
+    })),
+    path('games/random/cancel/<int:pk>/', GameRandomViewSet.as_view({
+        'delete': 'destroy'
+    })),
+    path('games/summary/<str:game_type>/<int:pk>/', GameSummaryViewSet.as_view({
+        'get': 'retrieve'
+    })),
 ]

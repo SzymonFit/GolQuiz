@@ -1,1 +1,33 @@
-<p>game-pvp works!</p>
+<!-- <div class="game-container">
+    <h1>Gra PvP</h1>
+    <p>ID Gry: {{ game?.id }}</p>
+    <p>Tryb: PvP</p>
+    <p>Data rozpoczęcia: {{ game?.start_time }}</p>
+    <p>Gracz 1: {{ game?.player1.username }}</p>
+    <p>Gracz 2: {{ game?.player2?.username || 'Oczekiwanie na gracza 2...' }}</p>
+  
+    <div *ngIf="waitingMessage; else questionBlock">
+      <h2>Proszę czekać na drugiego gracza...</h2>
+    </div>
+    <ng-template #questionBlock>
+      <h2>Pytanie {{ currentQuestionIndex + 1 }}/10</h2>
+      <p>{{ question?.question }}</p>
+  
+      <form (ngSubmit)="submitAnswer(answer)">
+        <ng-container *ngIf="question?.options; else textAnswer">
+          <div *ngFor="let option of question.options">
+            <input type="radio" name="answer" [value]="option" [(ngModel)]="answer">
+            <label>{{ option }}</label>
+          </div>
+        </ng-container>
+        <ng-template #textAnswer>
+          <input type="text" name="answer" [(ngModel)]="answer" required>
+        </ng-template>
+        <button type="submit">Wyślij</button>
+      </form>
+      <div *ngIf="showCorrectAnswer">
+        <strong>Poprawna odpowiedź:</strong> {{ question?.correct_answer }}
+      </div>
+    </ng-template>
+  </div>
+   -->

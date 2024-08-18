@@ -37,8 +37,6 @@ SECRET_KEY = 'django-insecure-88cm7ifre$#aq1d%9towzykxzdr+5ulao(ewyeocnp50#8uby7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -86,23 +84,42 @@ import os
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'my_quiz_app': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.security.csrf': {
+            'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
         },
@@ -166,13 +183,18 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',    
 ]
 
-CSRF_COOKIE_DOMAIN = 'localhost'
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+CORS_ORIGIN_ALLOW_ALL = False
+CSRF_COOKIE_DOMAIN =  'localhost'
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:4200',
+    'http://127.0.0.1:8000',
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',
+    'http://localhost',
+    # 'http://127.0.0.1:8000',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -184,14 +206,16 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 CORS_EXPOSE_HEADERS = [
     'X-CSRFToken',
 ]
-
+SESSION_COOKIE_HTTPONLY = False
+#DZIALAJACE
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'  # lub 'None' w zależności od potrzeb
+CSRF_COOKIE_SAMESITE = None  # lub 'None' w zależności od potrzeb
+SESSION_COOKIE_SAMESITE = None  # lub 'None' w zależności od potrzeb
 CSRF_COOKIE_SECURE = False
 APPEND_SLASH = True
 
-
+CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 CORS_ORIGIN_ALLOW_ALL = True

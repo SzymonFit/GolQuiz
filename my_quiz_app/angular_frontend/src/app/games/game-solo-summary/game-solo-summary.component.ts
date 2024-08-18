@@ -1,20 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../game.service';
 
 @Component({
   selector: 'app-game-solo-summary',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './game-solo-summary.component.html',
   styleUrls: ['./game-solo-summary.component.scss']
 })
-export class GameSoloSummaryComponent implements OnInit {
-  summary: any;
+export class GameSoloSummaryComponent {
+  game: any;
+  gameId: number;
+question: any;
 
-  constructor(private gameService: GameService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private gameService: GameService,
+    private router: Router
+  ) {
+    this.gameId = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
+    this.loadGameSummary();
+  }
 
-  ngOnInit(): void {
-    const gameId = 1; // Przykładowy ID gry, zmień na dynamiczne
-    this.gameService.getSoloGameSummary(gameId).subscribe(data => {
-      this.summary = data;
+  loadGameSummary() {
+    this.gameService.getSoloGameSummary(this.gameId).subscribe(data => {
+      this.game = data.game;
     });
+  }
+
+  goToMenu() {
+    this.router.navigate(['/menu']);  // Przekierowanie do menu
   }
 }

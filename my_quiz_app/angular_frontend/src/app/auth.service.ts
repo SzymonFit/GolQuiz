@@ -11,6 +11,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  
   private getCsrfTokenFromCookie(): string | null {
     const name = 'csrftoken=';
     const decodedCookie = decodeURIComponent(document.cookie);
@@ -23,7 +24,7 @@ export class AuthService {
     }
     return null;
   }
-
+  
   private getHeaders(): HttpHeaders {
     const csrfToken = this.getCsrfTokenFromCookie();
     return new HttpHeaders().set('X-CSRFToken', csrfToken || '');

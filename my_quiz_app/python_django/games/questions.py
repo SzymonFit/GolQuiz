@@ -6,15 +6,15 @@ from datetime import datetime, timedelta
 
 def load_questions(game_mode):
     file_paths = {
-        'mode1': [Path(settings.BASE_DIR) / "all_json's/top_scorers/top_scorers.json"],
+        'mode1': [Path(settings.BASE_DIR) / "python_django/all_json's/top_scorers/top_scorers.json"],
         'mode2': [
-            Path(settings.BASE_DIR) / "all_json's/squads/squads.json",
-            Path(settings.BASE_DIR) / "all_json's/leagues/leagues_by_country_England_PremierLeague.json",
-            Path(settings.BASE_DIR) / "all_json's/leagues/leagues_by_country_France_Ligue1.json",
-            Path(settings.BASE_DIR) / "all_json's/leagues/leagues_by_country_Germany_Bundesliga.json",
-            Path(settings.BASE_DIR) / "all_json's/leagues/leagues_by_country_Italy_SerieA.json",
-            Path(settings.BASE_DIR) / "all_json's/leagues/leagues_by_country_Poland_Ekstraklasa.json",
-            Path(settings.BASE_DIR) / "all_json's/leagues/leagues_by_country_Spain_LaLiga.json",
+            Path(settings.BASE_DIR) / "python_django/all_json's/squads/squads.json",
+            Path(settings.BASE_DIR) / "python_django/all_json's/leagues/leagues_by_country_England_PremierLeague.json",
+            Path(settings.BASE_DIR) / "python_django/all_json's/leagues/leagues_by_country_France_Ligue1.json",
+            Path(settings.BASE_DIR) / "python_django/all_json's/leagues/leagues_by_country_Germany_Bundesliga.json",
+            Path(settings.BASE_DIR) / "python_django/all_json's/leagues/leagues_by_country_Italy_SerieA.json",
+            Path(settings.BASE_DIR) / "python_django/all_json's/leagues/leagues_by_country_Poland_Ekstraklasa.json",
+            Path(settings.BASE_DIR) / "python_django/all_json's/leagues/leagues_by_country_Spain_LaLiga.json",
         ]
     }
     if game_mode not in file_paths:
@@ -78,7 +78,8 @@ def generate_squad_question(record):
         questions.append({
             "question": question_text,
             "correct_answer": correct_answer,
-            "options": options
+            "options": options,
+            "player_photo": player['photo']
         })
     else:
         question_text = f"What position does {player['name']} play in {team}?"
@@ -86,7 +87,8 @@ def generate_squad_question(record):
         questions.append({
             "question": question_text,
             "correct_answer": correct_answer,
-            "options": None
+            "options": None,
+            "player_photo": player['photo'] 
         })
 
     return questions[0]  # Return a single question dictionary instead of a list
@@ -119,13 +121,16 @@ def generate_mode1_question(record, place):
         "season": season,
         "player_name": top_scorer['player']['name'],
         "goals": top_scorer['statistics'][0]['goals']['total'],
-        "place": place + 1
+        "place": place + 1,
+        "team_logo": top_scorer['statistics'][0]['team']['logo'],  # Dodano logo drużyny
+        "league_logo": top_scorer['statistics'][0]['league']['logo']  # Dodano logo ligi
     }
 
 def generate_mode2_question(record):
     if isinstance(record['response'], list) and 'seasons' in record['response'][0]:
         league_id = record['response'][0]['league']['id']
         league_name = record['response'][0]['league']['name']
+        league_logo = record['response'][0]['league']['logo']  # Pobieranie logo ligi
         season_info = random.choice(record['response'][0]['seasons'])
         season_year = season_info['year']
         question_type = random.choice(['start_date', 'end_date'])
@@ -141,7 +146,8 @@ def generate_mode2_question(record):
         return {
             "question": question_text,
             "correct_answer": correct_answer,
-            "options": options
+            "options": options,
+            "league_logo": league_logo
         }
     elif isinstance(record['response'], list) and 'team' in record['response'][0]:
         return generate_squad_question(record)

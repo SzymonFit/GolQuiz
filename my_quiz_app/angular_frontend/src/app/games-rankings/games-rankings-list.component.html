@@ -1,6 +1,15 @@
 <div class="container">
   <h2>Ranking dla trybu {{ gameMode }}</h2>
 
+  <div class="user-position">
+    <p *ngIf="userPosition !== null">Jesteś na miejscu: {{ userPosition }}</p>
+    <p *ngIf="userPosition === null">Nie jesteś w rankingu.</p>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" [(ngModel)]="searchText" placeholder="Szukaj użytkownika..." (input)="filterRankings()">
+  </div>
+
   <table>
     <thead>
       <tr>
@@ -13,7 +22,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of rankings">
+      <tr *ngFor="let user of filteredRankings">
         <td>{{ user.position }}</td>
         <td>{{ user.username }}</td>
         <td>{{ user['pvp_points_' + gameMode] }}</td>

@@ -1,49 +1,59 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../game.service';
-import { WebSocketSubject } from 'rxjs/webSocket';
 
 @Component({
   selector: 'app-game-pvp',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './game-pvp.component.html',
   styleUrls: ['./game-pvp.component.scss']
 })
-export class GamePvpComponent implements OnInit {
-  gameMode: string;
-  currentGameId: number;
-  private socket: WebSocketSubject<any>;
+export class GamePvpComponent {
+  game: any;
+  question: any;
+  answer: string = '';
+  showCorrectAnswer: boolean = false;
+  isLastQuestion: boolean = false;
+  gameId: number;
 
-  constructor(private route: ActivatedRoute, private gameService: GameService, private router: Router) {
-    this.gameMode = '';
-    this.currentGameId = 0;
-    this.socket = new WebSocketSubject<any>('ws://${window.location.host}/ws/game/${gameId}/');
+  constructor(
+    private route: ActivatedRoute,
+    private gameService: GameService,
+    private router: Router
+  ) {
+    this.gameId = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
+    this.loadGameDetails();
   }
 
-  ngOnInit(): void {
-    this.gameMode = this.route.snapshot.paramMap.get('mode')!;
-    this.searchRandomOpponent();
-  }
-
-  searchRandomOpponent() {
-    this.gameService.createRandomGame(this.gameMode).subscribe(response => {
-      this.currentGameId = response.game_id;
-      this.openWebSocket(this.currentGameId);
+  loadGameDetails() {
+    this.gameService.getPvpGameDetails(this.gameId).subscribe(data => {
+      this.game = data.game;
+      this.question = data.question;
+      this.isLastQuestion = this.game.questions_answered_player1 >= 9;
     });
   }
 
-  openWebSocket(gameId: number) {
-    this.socket = new WebSocketSubject(`ws://${window.location.host}/ws/game/${gameId}/`);
-    this.socket.subscribe(message => {
-      if (message.type === 'opponent_joined') {
-        this.router.navigate([`/game-pvp`, gameId]);
+  submitAnswer() {
+    this.gameService.updateRandomGame(this.gameId, this.answer).subscribe(data => {
+      this.showCorrectAnswer = true;
+      this.answer = '';
+      if (data.message === 'Game ended') {
+        this.router.navigate([`/game-pvp-summary/${data.game_id}`]);
+      } else {
+        this.loadGameDetails();
       }
     });
   }
 
-  cancelGame() {
-    this.gameService.cancelRandomGame(this.currentGameId).subscribe(response => {
-      alert(response.message);
-      this.socket.unsubscribe();
-    });
+  nextQuestion() {
+    this.showCorrectAnswer = false;
+    this.loadGameDetails();
+  }
+
+  finishGame() {
+    this.router.navigate([`/game-pvp-summary/${this.gameId}`]);
   }
 }
