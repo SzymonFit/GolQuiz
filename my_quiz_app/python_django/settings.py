@@ -190,6 +190,7 @@ CSRF_COOKIE_DOMAIN =  'localhost'
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:4200',
     'http://127.0.0.1:8000',
+    'ws://localhost:4200'
 ]
 
 CORS_ALLOWED_ORIGINS = [

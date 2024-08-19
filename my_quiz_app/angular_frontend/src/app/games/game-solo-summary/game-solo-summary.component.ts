@@ -13,7 +13,7 @@ import { GameService } from '../game.service';
 export class GameSoloSummaryComponent {
   game: any;
   gameId: number;
-question: any;
+  question: any;
 
   constructor(
     private route: ActivatedRoute,

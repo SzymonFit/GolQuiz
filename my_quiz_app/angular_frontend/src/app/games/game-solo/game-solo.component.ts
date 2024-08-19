@@ -47,13 +47,6 @@ export class GameSoloComponent implements OnInit {
     return null;
   }
 
-
-  // Nagłówki do ogólnych żądań (bez ID sesji)
-  getGeneralHeaders(): HttpHeaders {
-    const csrfToken = this.getCsrfTokenFromCookie();
-    return new HttpHeaders().set('X-CSRFToken', csrfToken || '');
-  }
-
   // Nagłówki do żądań związanych z grą (z ID sesji)
   getGameHeaders(): HttpHeaders {
     const csrfToken = this.getCsrfTokenFromCookie();

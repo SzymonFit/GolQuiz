@@ -18,7 +18,6 @@ class GameSoloViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
-        # Logowanie nagłówków
         logger.debug(f"Request headers: {request.headers}")
         logger.debug(f"CSRF token from request: {request.META.get('HTTP_X_CSRFTOKEN')}")
         logger.debug(f"Session ID from request: {request.session.session_key}")
@@ -50,7 +49,6 @@ class GameSoloViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         game = get_object_or_404(GameSolo, id=pk)
 
-        # Logowanie nagłówków
         logger.debug(f"Request headers: {request.headers}")
         logger.debug(f"CSRF token from request: {request.META.get('HTTP_X_CSRFTOKEN')}")
         logger.debug(f"Session ID from request: {request.session.session_key}")
@@ -66,7 +64,6 @@ class GameSoloViewSet(viewsets.ViewSet):
             "game": GameSoloSerializer(game).data,
             "questions": game.questions
         })
-
 
     def update(self, request, pk=None):
         game = get_object_or_404(GameSolo, id=pk)
@@ -168,8 +165,14 @@ class GameRandomViewSet(viewsets.ViewSet):
 
         questions = game.questions
         if request.user == game.player1:
+            if game.questions_answered_player1 >= 10:
+                return Response({"message": "Czekaj na zakończenie przez drugiego gracza."}, status=status.HTTP_200_OK)
+            
             current_question = questions[game.questions_answered_player1] if game.questions_answered_player1 < len(questions) else None
         else:
+            if game.questions_answered_player2 >= 10:
+                return Response({"message": "Czekaj na zakończenie przez drugiego gracza."}, status=status.HTTP_200_OK)
+            
             current_question = questions[game.questions_answered_player2] if game.questions_answered_player2 < len(questions) else None
 
         answer = request.data.get('answer')
@@ -198,6 +201,8 @@ class GameRandomViewSet(viewsets.ViewSet):
             if game.questions_answered_player1 >= 10 and game.questions_answered_player2 >= 10:
                 game.end_time = timezone.now()
                 game.save()
+
+                # Zakończenie gry bez aktualizacji profili (zostanie to zrobione w summary)
                 channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.group_send)(
                     f'game_{game.id}',
@@ -209,18 +214,20 @@ class GameRandomViewSet(viewsets.ViewSet):
                 return Response({"message": "Game ended", "game_id": game.id}, status=status.HTTP_200_OK)
 
             if (request.user == game.player1 and game.questions_answered_player1 >= 10) or (request.user == game.player2 and game.questions_answered_player2 >= 10):
-                return Response({"message": "Waiting for the other player..."}, status=status.HTTP_200_OK)
+                return Response({"message": "Czekaj na zakończenie przez drugiego gracza."}, status=status.HTTP_200_OK)
 
             return Response({"message": "Answer recorded", "game_id": game.id}, status=status.HTTP_200_OK)
 
         return Response({"error": "Invalid state"}, status=status.HTTP_400_BAD_REQUEST)
 
+    
     def destroy(self, request, pk=None):
         game = get_object_or_404(GameRandom, id=pk)
         if game.player1 == request.user and game.player2 is None:
             game.delete()
             return Response({"message": "Game canceled"}, status=status.HTTP_200_OK)
         return Response({"error": "Cannot cancel the game"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class GameSummaryViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -236,68 +243,61 @@ class GameSummaryViewSet(viewsets.ViewSet):
         result = None
         game_mode = game.game_mode
 
-        if game_type == 'random':
+        if game_type == 'random' and not game.points_updated:
             profile1 = UserProfile.objects.get(user=game.player1)
             profile2 = UserProfile.objects.get(user=game.player2)
 
             if game.score_player1 > game.score_player2:
                 result = f"{game.player1.username} wins!"
-                if game_mode == 'mode1':
-                    profile1.pvp_wins_mode1 += 1
-                    profile1.pvp_points_mode1 += game.score_player1
-                    profile2.pvp_losses_mode1 += 1
-                    profile2.pvp_points_mode1 += game.score_player2
-                elif game_mode == 'mode2':
-                    profile1.pvp_wins_mode2 += 1
-                    profile1.pvp_points_mode2 += game.score_player1
-                    profile2.pvp_losses_mode2 += 1
-                    profile2.pvp_points_mode2 += game.score_player2
-                elif game_mode == 'mode3':
-                    profile1.pvp_wins_mode3 += 1
-                    profile1.pvp_points_mode3 += game.score_player1
-                    profile2.pvp_losses_mode3 += 1
-                    profile2.pvp_points_mode3 += game.score_player2
+                self._update_profiles(profile1, profile2, game.score_player1, game.score_player2, game_mode, 'win')
             elif game.score_player1 < game.score_player2:
                 result = f"{game.player2.username} wins!"
-                if game_mode == 'mode1':
-                    profile2.pvp_wins_mode1 += 1
-                    profile2.pvp_points_mode1 += game.score_player2
-                    profile1.pvp_losses_mode1 += 1
-                    profile1.pvp_points_mode1 += game.score_player1
-                elif game_mode == 'mode2':
-                    profile2.pvp_wins_mode2 += 1
-                    profile2.pvp_points_mode2 += game.score_player2
-                    profile1.pvp_losses_mode2 += 1
-                    profile1.pvp_points_mode2 += game.score_player1
-                elif game_mode == 'mode3':
-                    profile2.pvp_wins_mode3 += 1
-                    profile2.pvp_points_mode3 += game.score_player2
-                    profile1.pvp_losses_mode3 += 1
-                    profile1.pvp_points_mode3 += game.score_player1
+                self._update_profiles(profile2, profile1, game.score_player2, game.score_player1, game_mode, 'win')
             else:
                 result = "It's a tie!"
-                if game_mode == 'mode1':
-                    profile1.pvp_draws_mode1 += 1
-                    profile1.pvp_points_mode1 += game.score_player1
-                    profile2.pvp_draws_mode1 += 1
-                    profile2.pvp_points_mode1 += game.score_player2
-                elif game_mode == 'mode2':
-                    profile1.pvp_draws_mode2 += 1
-                    profile1.pvp_points_mode2 += game.score_player1
-                    profile2.pvp_draws_mode2 += 1
-                    profile2.pvp.points_mode2 += game.score_player2
-                elif game_mode == 'mode3':
-                    profile1.pvp_draws_mode3 += 1
-                    profile1.pvp.points_mode3 += game.score_player1
-                    profile2.pvp.draws_mode3 += 1
-                    profile2.pvp.points_mode3 += game.score_player2
+                self._update_profiles(profile1, profile2, game.score_player1, game.score_player2, game_mode, 'tie')
 
             profile1.save()
             profile2.save()
 
             game.points_updated = True
+            game.save()
 
         return Response({
             "game": GameRandomSerializer(game).data if game_type == 'random' else GameSoloSerializer(game).data,
             "result": result,
         })
+
+    def _update_profiles(self, winner_profile, loser_profile, winner_points, loser_points, game_mode, result):
+        if result == 'win':
+            if game_mode == 'mode1':
+                winner_profile.pvp_wins_mode1 += 1
+                winner_profile.pvp_points_mode1 += winner_points
+                loser_profile.pvp_losses_mode1 += 1
+                loser_profile.pvp_points_mode1 += loser_points
+            elif game_mode == 'mode2':
+                winner_profile.pvp_wins_mode2 += 1
+                winner_profile.pvp_points_mode2 += winner_points
+                loser_profile.pvp_losses_mode2 += 1
+                loser_profile.pvp_points_mode2 += loser_points
+            elif game_mode == 'mode3':
+                winner_profile.pvp_wins_mode3 += 1
+                winner_profile.pvp_points_mode3 += winner_points
+                loser_profile.pvp_losses_mode3 += 1
+                loser_profile.pvp_points_mode3 += loser_points
+        elif result == 'tie':
+            if game_mode == 'mode1':
+                winner_profile.pvp_draws_mode1 += 1
+                winner_profile.pvp_points_mode1 += winner_points
+                loser_profile.pvp_draws_mode1 += 1
+                loser_profile.pvp_points_mode1 += loser_points
+            elif game_mode == 'mode2':
+                winner_profile.pvp_draws_mode2 += 1
+                winner_profile.pvp_points_mode2 += winner_points
+                loser_profile.pvp_draws_mode2 += 1
+                loser_profile.pvp_points_mode2 += loser_points
+            elif game_mode == 'mode3':
+                winner_profile.pvp_draws_mode3 += 1
+                winner_profile.pvp_points_mode3 += winner_points
+                loser_profile.pvp_draws_mode3 += 1
+                loser_profile.pvp_points_mode3 += loser_points

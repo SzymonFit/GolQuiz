@@ -9,4 +9,4 @@ class GameSoloSerializer(serializers.ModelSerializer):
 class GameRandomSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameRandom
-        fields = ['id', 'player1', 'player2', 'score_player1', 'score_player2', 'questions_answered_player1', 'questions_answered_player2', 'game_mode', 'questions','start_tine','end_time', 'points_updated']
+        fields = ['id', 'player1', 'player2', 'score_player1', 'score_player2', 'questions_answered_player1', 'questions_answered_player2', 'game_mode', 'questions','start_time','end_time', 'points_updated']

@@ -75,18 +75,36 @@ export class MenuComponent {
   }
 
   startPvpGame(gameMode: string) {
+    console.log("Rozpoczęcie gry PvP w trybie:", gameMode);
     this.waitingForOpponent = true;
     const headers = this.getHeaders();
 
-    this.http.get(`/api/games/random/join/${gameMode}/`, { headers, withCredentials: true })
+    this.http.get(`http://localhost:8000/api/games/random/join/${gameMode}/`, { headers, withCredentials: true })
       .subscribe((data: any) => {
+        console.log("Otrzymane dane z backendu (PvP Game):", data);
+        
         if (data.redirect_url) {
-          this.router.navigateByUrl(data.redirect_url);
+          console.log("Otrzymany redirect_url:", data.redirect_url);
+          
+          // Jeśli URL zawiera `/api/games/random/`, wyciągamy `game_id`
+          if (data.redirect_url.startsWith('/api/games/random/')) {
+            const match = data.redirect_url.match(/\/api\/games\/random\/(\d+)/);
+            if (match) {
+              this.currentGameId = match[1];
+              console.log("Otrzymane game_id:", this.currentGameId);
+              this.router.navigate([`/game-pvp/${this.currentGameId}`]);
+            }
+          } else {
+            window.location.href = data.redirect_url;
+          }
         } else if (data.game_id) {
-          this.currentGameId = data.game_id;
+          console.log("Otrzymane game_id:", data.game_id);
+          this.currentGameId = data.game_id; 
           const socket$ = this.openWebSocket(data.game_id);
           socket$.subscribe((message: any) => {
+            console.log("Otrzymano wiadomość WebSocket:", message);
             if (message.message === 'opponent_joined') {
+              console.log("Przekierowanie na:", `/game-pvp/${this.currentGameId}`);``
               this.router.navigate([`/game-pvp/${this.currentGameId}`]);
             }
           });
@@ -98,11 +116,13 @@ export class MenuComponent {
       });
   }
 
+  
+  
   cancelWaiting() {
     if (this.currentGameId) {
       const headers = this.getHeaders();
-
-      this.http.get(`/api/games/random/cancel/${this.currentGameId}/`, { headers, withCredentials: true })
+  
+      this.http.delete(`http://localhost:8000/api/games/random/cancel/${this.currentGameId}/`, { headers, withCredentials: true })
         .subscribe((data: any) => {
           alert(data.message);
           this.closeModal();
@@ -114,9 +134,11 @@ export class MenuComponent {
       this.closeModal();
     }
   }
+  
 
   private openWebSocket(gameId: string): WebSocketSubject<any> {
-    const url = `ws://${window.location.host}/ws/game/${gameId}/`;
+    // Użyj poprawnego URL WebSocket z poprawnym portem
+    const url = `ws://localhost:8000/ws/game/${gameId}/`;
     return webSocket(url);
   }
 

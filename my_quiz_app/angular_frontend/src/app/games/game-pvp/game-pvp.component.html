@@ -1,33 +1,64 @@
-<!-- <div class="game-container">
-    <h1>Gra PvP</h1>
-    <p>ID Gry: {{ game?.id }}</p>
-    <p>Tryb: PvP</p>
-    <p>Data rozpoczęcia: {{ game?.start_time }}</p>
-    <p>Gracz 1: {{ game?.player1.username }}</p>
-    <p>Gracz 2: {{ game?.player2?.username || 'Oczekiwanie na gracza 2...' }}</p>
-  
-    <div *ngIf="waitingMessage; else questionBlock">
-      <h2>Proszę czekać na drugiego gracza...</h2>
+<div *ngIf="!showWaitMessage">
+  <div *ngIf="game && question">
+    <h2>{{ game.game_mode }}</h2>
+    
+    <!-- Wyświetlanie informacji o graczach -->
+    <div class="players-info">
+      <p><strong>Gracz 1:</strong> {{ game.player1.username }} - Wynik: {{ game.score_player1 }}</p>
+      <p><strong>Gracz 2:</strong> {{ game.player2?.username || 'Oczekiwanie na gracza 2...' }} - Wynik: {{ game.score_player2 }}</p>
     </div>
-    <ng-template #questionBlock>
-      <h2>Pytanie {{ currentQuestionIndex + 1 }}/10</h2>
-      <p>{{ question?.question }}</p>
-  
-      <form (ngSubmit)="submitAnswer(answer)">
-        <ng-container *ngIf="question?.options; else textAnswer">
-          <div *ngFor="let option of question.options">
-            <input type="radio" name="answer" [value]="option" [(ngModel)]="answer">
-            <label>{{ option }}</label>
-          </div>
-        </ng-container>
-        <ng-template #textAnswer>
-          <input type="text" name="answer" [(ngModel)]="answer" required>
-        </ng-template>
-        <button type="submit">Wyślij</button>
-      </form>
-      <div *ngIf="showCorrectAnswer">
-        <strong>Poprawna odpowiedź:</strong> {{ question?.correct_answer }}
+
+    <h3>Question {{ game.questions_answered_player1 + 1 }}/10</h3>
+
+    <!-- Wyświetlanie logo drużyny, jeśli jest dostępne -->
+    <div *ngIf="question.team_logo" style="margin-bottom: 10px;">
+      <img [src]="question.team_logo" alt="Team Logo" width="100">
+    </div>
+
+    <!-- Wyświetlanie logo ligi, jeśli jest dostępne -->
+    <div *ngIf="question.league_logo" style="margin-bottom: 10px;">
+      <img [src]="question.league_logo" alt="League Logo" width="100">
+    </div>
+
+    <!-- Wyświetlanie zdjęcia piłkarza, jeśli jest dostępne -->
+    <div *ngIf="question.player_photo" style="margin-bottom: 10px;">
+      <img [src]="question.player_photo" alt="Player Photo" width="100">
+    </div>
+
+    <p>{{ question.question }}</p>
+
+    <!-- Wyświetlanie opcji odpowiedzi -->
+    <div *ngIf="question.options && question.options.length > 0; else textAnswer">
+      <div *ngFor="let option of question.options">
+        <input 
+          type="radio" 
+          [(ngModel)]="answer" 
+          [value]="option" 
+          [id]="option">
+        <label [for]="option">{{ option }}</label><br>
       </div>
+    </div>
+
+    <!-- Jeśli nie ma opcji, wyświetl pole tekstowe -->
+    <ng-template #textAnswer>
+      <input type="text" [(ngModel)]="answer" id="answer" name="answer" required>
     </ng-template>
+
+    <!-- Komunikat o błędzie, jeśli nie wpisano odpowiedzi lub nie wybrano opcji -->
+    <div *ngIf="showError" style="color: red;">
+      Please select or enter an answer before submitting.
+    </div>
+
+    <button (click)="submitAnswer(answer)">Submit</button>
+
+    <div *ngIf="showCorrectAnswer" style="margin-top: 20px;">
+      <p>Correct Answer: {{ question.correct_answer }}</p>
+      <button *ngIf="!isLastQuestion && showCorrectAnswer" (click)="nextQuestion()">Next Question</button>
+      <button *ngIf="isLastQuestion && showCorrectAnswer" (click)="finishGame()">Finish Game</button>
+    </div>
   </div>
-   -->
+</div>
+
+<div *ngIf="showWaitMessage">
+  <p>Czekaj na zakończenie przez drugiego gracza...</p>
+</div>

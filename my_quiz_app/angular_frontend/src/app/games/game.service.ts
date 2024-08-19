@@ -71,12 +71,12 @@ getSoloGameDetails(gameId: number, options?: { headers?: HttpHeaders, withCreden
 }
 
 
-updateSoloGame(gameId: number, answer: string): Observable<any> {
-  return this.http.put(`${this.apiUrl}solo/${gameId}/`, { answer }, {
-    headers: this.getHeaders(),
-    withCredentials: true
-  });
-}
+  updateSoloGame(gameId: number, answer: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}solo/${gameId}/`, { answer }, {
+      headers: this.getHeaders(),
+      withCredentials: true
+    });
+  }
 
   getSoloGameSummary(gameId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}summary/solo/${gameId}/`, {
@@ -107,12 +107,12 @@ updateSoloGame(gameId: number, answer: string): Observable<any> {
   }
 
   cancelRandomGame(gameId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}random/${gameId}/`, {
+    return this.http.delete(`${this.apiUrl}random/cancel/${gameId}/`, {
       headers: this.getHeaders(),
       withCredentials: true
     });
   }
-
+  
   getPvpGameSummary(gameId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}summary/random/${gameId}/`, {
       headers: this.getHeaders(),

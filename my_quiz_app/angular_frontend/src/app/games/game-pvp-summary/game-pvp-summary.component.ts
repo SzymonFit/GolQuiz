@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../game.service';
 
 @Component({
@@ -11,12 +11,17 @@ import { GameService } from '../game.service';
   styleUrls: ['./game-pvp-summary.component.scss']
 })
 export class GamePvpSummaryComponent {
+
   game: any;
   gameId: number;
+  player2Questions: any;
+  result: any;
+q: any;
 
   constructor(
     private route: ActivatedRoute,
-    private gameService: GameService
+    private gameService: GameService,
+    private router: Router
   ) {
     this.gameId = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
     this.loadGameSummary();
@@ -26,5 +31,9 @@ export class GamePvpSummaryComponent {
     this.gameService.getPvpGameSummary(this.gameId).subscribe(data => {
       this.game = data.game;
     });
+  }
+  
+  goToMenu(){
+    this.router.navigate(['/menu']);
   }
 }
