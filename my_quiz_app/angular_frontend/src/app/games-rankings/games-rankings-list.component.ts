@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GamesRankingsService } from './games.rankings.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./games-rankings-list.component.scss']
 })
 export class GamesRankingsListComponent implements OnInit {
+
   rankings: any[] = [];
   filteredRankings: any[] = [];
   userPosition: number | null = null;
@@ -20,7 +21,8 @@ export class GamesRankingsListComponent implements OnInit {
 
   constructor(
     private rankingsService: GamesRankingsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,8 +41,9 @@ export class GamesRankingsListComponent implements OnInit {
       },
       error: (err) => console.error('Failed to load rankings', err)
     });
+    
   }
-  
+
 
   filterRankings(): void {
     if (!this.rankings || this.rankings.length === 0) {
@@ -56,5 +59,8 @@ export class GamesRankingsListComponent implements OnInit {
     }
   }
   
+  goToMenu(){
+    this.router.navigate(['/menu']);
+  }
 }
 

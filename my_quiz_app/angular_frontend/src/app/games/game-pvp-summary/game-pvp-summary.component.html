@@ -1,37 +1,41 @@
-<div class="summary-container">
-  <h2>Podsumowanie Gry PvP</h2>
-  <p>ID Gry: {{ game?.id }}</p>
-  <p>Data rozpoczęcia: {{ game?.start_time }}</p>
-  <p>Data zakończenia: {{ game?.end_time }}</p>
-  <p>Wynik Gracza 1: {{ game?.score_player1 }}</p>
-  <p>Wynik Gracza 2: {{ game?.score_player2 }}</p>
+<body>
+  <div class="summary-container">
+    <h2>Game Summary</h2>
+    <div class="game-stats">
+      <p><strong>Game ID:</strong> {{ game?.id }}</p>
+      <p><strong>Start Date:</strong> {{ game?.start_time }}</p>
+      <p><strong>End Date:</strong> {{ game?.end_time }}</p>
+      <p><strong>Result:</strong> {{ game?.result }}</p>
+    </div>
 
-  <h3>Wynik</h3>
-  <p>{{ result }}</p>
+    <div class="questions-answers-container">
+      <div class="player-questions">
+        <h3>Player 1 Questions and Answers</h3>
+        <ul class="questions-list">
+          <ng-container *ngFor="let q of game?.questions">
+            <li *ngIf="q.player === 'player1'">
+              <strong>Question:</strong> {{ q.question }}<br>
+              <strong>Player 1's Answer:</strong> {{ q.user_answer }}<br>
+              <strong>Is Correct:</strong> {{ q.is_correct ? 'Yes' : 'No' }}
+            </li>
+          </ng-container>
+        </ul>
+      </div>
 
-  <h3>Pytania i odpowiedzi Gracza 1</h3>
-  <ul>
-    <ng-container *ngFor="let q of game?.questions">
-      <li *ngIf="q.player === 'player1'">
-        <strong>Pytanie:</strong> {{ q.question }}<br>
-        <strong>Odpowiedź Gracza 1:</strong> {{ q.user_answer }}<br>
-        <strong>Poprawna odpowiedź:</strong> {{ q.correct_answer }}<br>
-        <strong>Czy poprawna:</strong> {{ q.is_correct ? 'Tak' : 'Nie' }}
-      </li>
-    </ng-container>
-  </ul>
+      <div class="player-questions">
+        <h3>Player 2 Questions and Answers</h3>
+        <ul class="questions-list">
+          <ng-container *ngFor="let q of game?.questions">
+            <li *ngIf="q.player === 'player2'">
+              <strong>Question:</strong> {{ q.question }}<br>
+              <strong>Player 2's Answer:</strong> {{ q.user_answer }}<br>
+              <strong>Is Correct:</strong> {{ q.is_correct ? 'Yes' : 'No' }}
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
 
-  <h3>Pytania i odpowiedzi Gracza 2</h3>
-  <ul>
-    <ng-container *ngFor="let q of game?.questions">
-      <li *ngIf="q.player === 'player2'">
-        <strong>Pytanie:</strong> {{ q.question }}<br>
-        <strong>Odpowiedź Gracza 2:</strong> {{ q.user_answer }}<br>
-        <strong>Poprawna odpowiedź:</strong> {{ q.correct_answer }}<br>
-        <strong>Czy poprawna:</strong> {{ q.is_correct ? 'Tak' : 'Nie' }}
-      </li>
-    </ng-container>
-  </ul>
-
-  <button class="summary-button" (click)="goToMenu()">Powrót do menu</button>
-</div>
+    <button class="summary-button" (click)="goToMenu()">Return to Menu</button>
+  </div>
+</body>

@@ -240,32 +240,54 @@ class GameSummaryViewSet(viewsets.ViewSet):
         else:
             return Response({"error": "Invalid game type"}, status=status.HTTP_400_BAD_REQUEST)
 
-        result = None
-        game_mode = game.game_mode
-
-        if game_type == 'random' and not game.points_updated:
+        # Sprawdzenie, czy wynik już został przypisany
+        if not game.points_updated:
             profile1 = UserProfile.objects.get(user=game.player1)
             profile2 = UserProfile.objects.get(user=game.player2)
 
+            # Obliczanie wyniku
             if game.score_player1 > game.score_player2:
                 result = f"{game.player1.username} wins!"
-                self._update_profiles(profile1, profile2, game.score_player1, game.score_player2, game_mode, 'win')
+                self._update_profiles(profile1, profile2, game.score_player1, game.score_player2, game.game_mode, 'win')
             elif game.score_player1 < game.score_player2:
                 result = f"{game.player2.username} wins!"
-                self._update_profiles(profile2, profile1, game.score_player2, game.score_player1, game_mode, 'win')
+                self._update_profiles(profile2, profile1, game.score_player2, game.score_player1, game.game_mode, 'win')
             else:
                 result = "It's a tie!"
-                self._update_profiles(profile1, profile2, game.score_player1, game.score_player2, game_mode, 'tie')
+                self._update_profiles(profile1, profile2, game.score_player1, game.score_player2, game.game_mode, 'tie')
 
+            # Aktualizacja punktów
             profile1.save()
             profile2.save()
 
+            # Zapisanie wyniku i oznaczenie gry jako zaktualizowanej
+            game.result = result
             game.points_updated = True
             game.save()
+        else:
+            result = game.result  # Pobierz wynik, jeśli już został zapisany
+
+        game_data = GameRandomSerializer(game).data if game_type == 'random' else GameSoloSerializer(game).data
+        
+        # Dodanie wyniku między end_time a points_updated
+        game_data_with_result = {
+            "id": game_data["id"],
+            "player1": game_data["player1"],
+            "player2": game_data["player2"],
+            "score_player1": game_data["score_player1"],
+            "score_player2": game_data["score_player2"],
+            "questions_answered_player1": game_data["questions_answered_player1"],
+            "questions_answered_player2": game_data["questions_answered_player2"],
+            "game_mode": game_data["game_mode"],
+            "questions": game_data["questions"],
+            "start_time": game_data["start_time"],
+            "end_time": game_data["end_time"],
+            "result": result,  # Dodaj wynik tutaj
+            "points_updated": game_data["points_updated"],
+        }
 
         return Response({
-            "game": GameRandomSerializer(game).data if game_type == 'random' else GameSoloSerializer(game).data,
-            "result": result,
+            "game": game_data_with_result,
         })
 
     def _update_profiles(self, winner_profile, loser_profile, winner_points, loser_points, game_mode, result):

@@ -1,42 +1,61 @@
-<div *ngIf="profile; else loading">
-  <h2>Profil użytkownika</h2>
-  <p>Login: {{ profile.user.username }}</p>
-  <p>Email: {{ profile.user.email }}</p>
-  <p>Zagrane gry: {{ profile.total_games }}</p>
+<body>
+<div *ngIf="profile; else loading" class="profile-container">
+  <h2>User Profile</h2>
+  <div class="user-info">
+    <p><strong>Login:</strong> {{ profile.user.username }}</p>
+    <p><strong>Email:</strong> {{ profile.user.email }}</p>
+    <p><strong>Games played:</strong> {{ profile.total_games }}</p>
+  </div>
 
-  <h3>Gry Solo</h3>
-  <p>Zagrane gry solo: {{ profile.solo_games_played }}</p>
-  <p>Punkty w trybie 1: {{ profile.solo_points_mode1 }}</p>
-  <p>Punkty w trybie 2: {{ profile.solo_points_mode2 }}</p>
-  <p>Punkty w trybie 3: {{ profile.solo_points_mode3 }}</p>
+  <div class="games-stats">
+    <!-- Kolumna dla Solo Games -->
+    <div class="games-column">
+      <h3>Solo Games</h3>
+      <p><strong>Played:</strong> {{ profile.solo_games_played }}</p>
+      <p><strong>Goal Hunter points:</strong> {{ profile.solo_points_mode1 }}</p>
+      <p><strong>Squad Master points:</strong> {{ profile.solo_points_mode2 }}</p>
+      <p><strong>Champion points:</strong> {{ profile.solo_points_mode3 }}</p>
+    </div>
 
-  <h3>Gry PvP</h3>
-  <h4>Tryb 1</h4>
-  <p>Wygrane: {{ profile.pvp_wins_mode1 }}</p>
-  <p>Przegrane: {{ profile.pvp_losses_mode1 }}</p>
-  <p>Remisy: {{ profile.pvp_draws_mode1 }}</p>
-  <p>Punkty: {{ profile.pvp_points_mode1 }}</p>
+    <!-- Kolumna dla PvP Goal Hunter -->
+    <div class="games-column">
+      <h3>Goal Hunter (PvP)</h3>
+      <p><strong>Wins:</strong> {{ profile.pvp_wins_mode1 }}</p>
+      <p><strong>Loses:</strong> {{ profile.pvp_losses_mode1 }}</p>
+      <p><strong>Draws:</strong> {{ profile.pvp_draws_mode1 }}</p>
+      <p><strong>Points:</strong> {{ profile.pvp_points_mode1 }}</p>
+    </div>
 
-  <h4>Tryb 2</h4>
-  <p>Wygrane: {{ profile.pvp_wins_mode2 }}</p>
-  <p>Przegrane: {{ profile.pvp_losses_mode2 }}</p>
-  <p>Remisy: {{ profile.pvp_draws_mode2 }}</p>
-  <p>Punkty: {{ profile.pvp_points_mode2 }}</p>
+    <!-- Kolumna dla PvP Squad Master -->
+    <div class="games-column">
+      <h3>Squad Master (PvP)</h3>
+      <p><strong>Wins:</strong> {{ profile.pvp_wins_mode2 }}</p>
+      <p><strong>Loses:</strong> {{ profile.pvp_losses_mode2 }}</p>
+      <p><strong>Draws:</strong> {{ profile.pvp_draws_mode2 }}</p>
+      <p><strong>Points:</strong> {{ profile.pvp_points_mode2 }}</p>
+    </div>
 
-  <h4>Tryb 3</h4>
-  <p>Wygrane: {{ profile.pvp_wins_mode3 }}</p>
-  <p>Przegrane: {{ profile.pvp_losses_mode3 }}</p>
-  <p>Remisy: {{ profile.pvp_draws_mode3 }}</p>
-  <p>Punkty: {{ profile.pvp_points_mode3 }}</p>
+    <!-- Kolumna dla PvP Champion -->
+    <div class="games-column">
+      <h3>Champion (PvP)</h3>
+      <p><strong>Wins:</strong> {{ profile.pvp_wins_mode3 }}</p>
+      <p><strong>Loses:</strong> {{ profile.pvp_losses_mode3 }}</p>
+      <p><strong>Draws:</strong> {{ profile.pvp_draws_mode3 }}</p>
+      <p><strong>Points:</strong> {{ profile.pvp_points_mode3 }}</p>
+    </div>
+  </div>
 
-  <button class="button" (click)="logout()">Wyloguj się</button>
-  <button class="button" (click)="goToMenu()">Wróć do menu</button>
+  <div class="button-container">
+    <button class="button" (click)="logout()">Wyloguj się</button>
+    <button class="button" (click)="goToMenu()">Wróć do menu</button>
+  </div>
 </div>
 
 <ng-template #loading>
   <p>Loading profile...</p>
 </ng-template>
 
-<div *ngIf="error">
+<div *ngIf="error" class="error-message">
   <p>Error: {{ error }}</p>
 </div>
+</body>

@@ -81,14 +81,9 @@ class PasswordResetView(APIView):
         if email:
             user = User.objects.filter(email=email).first()
             if user:
-                # Generowanie tokenu do resetu hasła
                 token = default_token_generator.make_token(user)
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
-                
-                # Składanie URL do resetu hasła (musisz dostosować to do swojego frontendu)
-                reset_url = f"http://localhost:4200/api/accounts/reset/{uid}/{token}/"
-                
-                # Wysyłanie emaila z linkiem do resetu hasła
+                reset_url = f"http://localhost:4200/accounts/reset/{uid}/{token}/"
                 send_mail(
                     subject="Reset your password",
                     message=f"Click the link to reset your password: {reset_url}",
@@ -114,7 +109,7 @@ class PasswordResetDoneView(APIView):
 
 class PasswordResetConfirmView(APIView):
     token_generator = default_token_generator
-    success_url = '/api/accounts/password/reset/complete/'  # URL sukcesu
+    success_url = '/accounts/password/reset/complete/'
 
     @method_decorator(csrf_protect)
     def post(self, request, uidb64=None, token=None, *args, **kwargs):
@@ -132,12 +127,9 @@ class PasswordResetConfirmView(APIView):
         if not self.token_generator.check_token(user, token):
             return Response({"detail": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Pobranie nowego hasła z żądania
         new_password = request.data.get("new_password")
         if not new_password:
             return Response({"detail": "New password not provided."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Ustawienie nowego hasła i zapisanie użytkownika w bazie danych
         user.set_password(new_password)
         user.save()
 

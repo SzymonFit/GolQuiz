@@ -1,46 +1,51 @@
-<div class="menu-container">
-  <h2>Menu Gier</h2>
-  <button class="menu-button" (click)="openGameModal('mode1')">Goal Hunter</button>
-  <button class="menu-button" (click)="openGameModal('mode2')">Squad Master</button>
-  <button class="menu-button" (click)="openGameModal('mode3')">I can take both</button>
-  <button class="menu-button" (click)="goToProfile()">Przejdź do Profilu (API)</button>
-</div>
-
-<!-- Modals -->
-<div *ngIf="currentGameMode === 'mode1'" class="modal">
-  <div class="modal-content">
-    <h2>Wybierz opcję</h2>
-    <button class="menu-button" (click)="startSoloGame('mode1')">Zagraj sam</button>
-    <button class="menu-button" (click)="startPvpGame('mode1')">Wyszukaj losowo przeciwnika</button>
-    <button class="menu-button" (click)="goToRanking('mode1')">Ranking Goal Hunter</button>
-    <button class="close-button" (click)="closeModal()">Zamknij</button>
+<body>
+  <h1>Gol Quiz - test your skills!</h1>
+  <div class="container menu-container">
+    <h2>Menu</h2>
+    <div class="menu-buttons">
+      <button class="menu-button" (click)="openGameModal('mode1')">Goal Hunter</button>
+      <button class="menu-button" (click)="openGameModal('mode2')">Squad Master</button>
+      <button class="menu-button" (click)="openGameModal('mode3')">Champion</button>
+      <button class="menu-button" (click)="goToProfile()">Profile</button>
+    </div>
   </div>
-</div>
 
-<div *ngIf="currentGameMode === 'mode2'" class="modal">
-  <div class="modal-content">
-    <h2>Wybierz opcję</h2>
-    <button class="menu-button" (click)="startSoloGame('mode2')">Zagraj sam</button>
-    <button class="menu-button" (click)="startPvpGame('mode2')">Wyszukaj losowo przeciwnika</button>
-    <button class="menu-button" (click)="goToRanking('mode2')">Ranking Squad Master</button>
-    <button class="close-button" (click)="closeModal()">Zamknij</button>
+  <!-- Modals -->
+  <div *ngIf="currentGameMode === 'mode1'" class="modal">
+    <div class="modal-content">
+      <h2>Select an option</h2>
+      <button class="menu-button" (click)="startSoloGame('mode1')">Play Solo</button>
+      <button class="menu-button" (click)="startPvpGame('mode1')">PvP</button>
+      <button class="menu-button" (click)="goToRanking('mode1')">Goal Hunter Ranking</button>
+      <button class="close-button" (click)="closeModal()">Close</button>
+    </div>
   </div>
-</div>
 
-<div *ngIf="currentGameMode === 'mode3'" class="modal">
-  <div class="modal-content">
-    <h2>Wybierz opcję</h2>
-    <button class="menu-button" (click)="startSoloGame('mode3')">Zagraj sam</button>
-    <button class="menu-button" (click)="startPvpGame('mode3')">Wyszukaj losowo przeciwnika</button>
-    <button class="menu-button" (click)="goToRanking('mode3')">Ranking I can take both</button>
-    <button class="close-button" (click)="closeModal()">Zamknij</button>
+  <div *ngIf="currentGameMode === 'mode2'" class="modal">
+    <div class="modal-content">
+      <h2>Select an option</h2>
+      <button class="menu-button" (click)="startSoloGame('mode2')">Play Solo</button>
+      <button class="menu-button" (click)="startPvpGame('mode2')">PvP</button>
+      <button class="menu-button" (click)="goToRanking('mode2')">Squad Master Ranking</button>
+      <button class="close-button" (click)="closeModal()">Close</button>
+    </div>
   </div>
-</div>
 
-<div *ngIf="waitingForOpponent" class="modal">
-  <div class="modal-content">
-    <h2>Proszę czekać, czekamy na drugiego gracza...</h2>
-    <p *ngIf="currentGameId">Game ID: {{ currentGameId }}</p>
-    <button class="close-button" (click)="cancelWaiting()">Anuluj</button>
+  <div *ngIf="currentGameMode === 'mode3'" class="modal">
+    <div class="modal-content">
+      <h2>Select an option</h2>
+      <button class="menu-button" (click)="startSoloGame('mode3')">Play Solo</button>
+      <button class="menu-button" (click)="startPvpGame('mode3')">PvP</button>
+      <button class="menu-button" (click)="goToRanking('mode3')">Champion Ranking</button>
+      <button class="close-button" (click)="closeModal()">Close</button>
+    </div>
   </div>
-</div>
+
+  <div *ngIf="waitingForOpponent" class="modal">
+    <div class="modal-content">
+      <h2>Proszę czekać, czekamy na drugiego gracza...</h2>
+      <p *ngIf="currentGameId">Game ID: {{ currentGameId }}</p>
+      <button class="close-button" (click)="cancelWaiting()">Close</button>
+    </div>
+  </div>
+</body>

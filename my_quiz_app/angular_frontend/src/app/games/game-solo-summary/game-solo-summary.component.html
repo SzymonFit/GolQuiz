@@ -1,20 +1,21 @@
-<div class="summary-container">
-  <h2>Podsumowanie Gry</h2>
-  <p>ID Gry: {{ game?.id }}</p>
-  <p>Data rozpoczęcia: {{ game?.start_time }}</p>
-  <p>Data zakończenia: {{ game?.end_time }}</p>
-  <p>Twój wynik: {{ game?.score_player1 }}</p>
+<body>
+  <div class="summary-container">
+    <h2>Game Summary</h2>
+    <p>Game ID: {{ game?.id }}</p>
+    <p>Start date: {{ game?.start_time }}</p>
+    <p>End Date: {{ game?.end_time }}</p>
+    <p>Your score: {{ game?.score_player1 }}</p>
 
-  <h3>Pytania</h3>
-  <ul>
-    <ng-container *ngFor="let question of game?.questions">
-      <li *ngIf="question.user_answer">
-        <strong>Pytanie:</strong> {{ question.question }}<br>
-        <strong>Twoja odpowiedź:</strong> {{ question.user_answer }}<br>
-        <strong>Poprawna odpowiedź:</strong> {{ question.correct_answer }}<br>
-        <strong>Czy poprawna:</strong> {{ question.is_correct }}
-      </li>
-    </ng-container>
-  </ul>
-  <button class="button" (click)="goToMenu()">Wróć do menu</button>
-</div>
+    <h3>Questions</h3>
+    <ul>
+      <ng-container *ngFor="let question of game?.questions">
+        <li *ngIf="question.user_answer">
+          <strong>Question:</strong> {{ question.question }}<br>
+          <strong>Your answer:</strong> {{ question.user_answer }}<br>
+          <strong>Is correct?:</strong> {{ question.is_correct }}
+        </li>
+      </ng-container>
+    </ul>
+    <button class="button" (click)="goToMenu()">Back to menu</button>
+  </div>
+</body>

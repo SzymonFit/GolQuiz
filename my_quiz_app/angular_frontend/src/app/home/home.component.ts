@@ -17,9 +17,9 @@ import { CommonModule } from '@angular/common';
 })
 export class HomeComponent implements OnInit {
   descriptions: string[] = [
-    "Tryb 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    "Tryb 2: Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "Tryb 3: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."
+    "Goal Hunter - Test your knowledge of who scored how many goals in a specific season or where they ranked in the top scorers' list",
+    "Squad Master - No lineup is a mystery to you. You know the positions, numbers, and clubs of the players like the back of your hand",
+   "Champion - You’re a master of both disciplines. Challenge yourself in this ultimate mode."
   ];
   currentDescription: string = '';  
   currentIndex: number = 0;

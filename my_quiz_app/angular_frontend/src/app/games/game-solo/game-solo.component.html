@@ -1,51 +1,51 @@
-<div *ngIf="game && currentQuestion">
-  <h2>{{ game.game_mode }}</h2>
-  <h3>Question {{ questions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}</h3>
+<body>
+  <div *ngIf="game && currentQuestion" class="question-container">
+    <h2 *ngIf="game.game_mode === 'mode1'">Goal Hunter</h2>
+    <h2 *ngIf="game.game_mode === 'mode2'">Squad Master</h2>
+    <h2 *ngIf="game.game_mode === 'mode3'">Champion</h2>
 
-  <!-- Wyświetlanie logo drużyny, jeśli jest dostępne -->
-  <div *ngIf="currentQuestion.team_logo" style="margin-bottom: 10px;">
-    <img [src]="currentQuestion.team_logo" alt="Team Logo" width="100">
-  </div>
+    <h3>Question {{ questions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}</h3>
 
-  <!-- Wyświetlanie logo ligi, jeśli jest dostępne -->
-  <div *ngIf="currentQuestion.league_logo" style="margin-bottom: 10px;">
-    <img [src]="currentQuestion.league_logo" alt="League Logo" width="100">
-  </div>
+    <!-- Sekcja z logo drużyny i ligi obok siebie -->
+    <div class="logos-frame">
+      <div *ngIf="currentQuestion.team_logo" class="logo-frame">
+        <img [src]="currentQuestion.team_logo" alt="Team Logo">
+      </div>
+      <div *ngIf="currentQuestion.league_logo" class="logo-frame">
+        <img [src]="currentQuestion.league_logo" alt="League Logo">
+      </div>
+    </div>
 
-  <!-- Wyświetlanie zdjęcia piłkarza, jeśli jest dostępne -->
-  <div *ngIf="currentQuestion.player_photo" style="margin-bottom: 10px;">
-    <img [src]="currentQuestion.player_photo" alt="Player Photo" width="100">
-  </div>
+    <p>{{ currentQuestion.question }}</p>
 
-  <p>{{ currentQuestion.question }}</p>
+    <!-- Wyświetlanie opcji odpowiedzi -->
+    <div *ngIf="currentQuestion.options && currentQuestion.options.length > 0; else textAnswer">
+      <div *ngFor="let option of currentQuestion.options">
+        <input 
+          type="radio" 
+          [(ngModel)]="answer" 
+          [value]="option" 
+          [id]="option">
+        <label [for]="option">{{ option }}</label><br>
+      </div>
+    </div>
 
-  <!-- Wyświetlanie opcji odpowiedzi -->
-  <div *ngIf="currentQuestion.options && currentQuestion.options.length > 0; else textAnswer">
-    <div *ngFor="let option of currentQuestion.options">
-      <input 
-        type="radio" 
-        [(ngModel)]="answer" 
-        [value]="option" 
-        [id]="option">
-      <label [for]="option">{{ option }}</label><br>
+    <!-- Jeśli nie ma opcji, wyświetl pole tekstowe -->
+    <ng-template #textAnswer>
+      <input type="text" [(ngModel)]="answer" id="answer" name="answer" required>
+    </ng-template>
+
+    <!-- Komunikat o błędzie, jeśli nie wpisano odpowiedzi lub nie wybrano opcji -->
+    <div *ngIf="showError" class="error-message">
+      Please select or enter an answer before submitting.
+    </div>
+
+    <button (click)="submitAnswer()" class="submit-button">Submit</button>
+
+    <div *ngIf="showCorrectAnswer" class="correct-answer">
+      <p>Correct Answer: {{ currentQuestion.correct_answer }}</p>
+      <button *ngIf="!isLastQuestion && showCorrectAnswer" (click)="nextQuestion()">Next Question</button>
+      <button *ngIf="isLastQuestion && showCorrectAnswer" (click)="finishGame()">Finish Game</button>
     </div>
   </div>
-
-  <!-- Jeśli nie ma opcji, wyświetl pole tekstowe -->
-  <ng-template #textAnswer>
-    <input type="text" [(ngModel)]="answer" id="answer" name="answer" required>
-  </ng-template>
-
-  <!-- Komunikat o błędzie, jeśli nie wpisano odpowiedzi lub nie wybrano opcji -->
-  <div *ngIf="showError" style="color: red;">
-    Please select or enter an answer before submitting.
-  </div>
-
-  <button (click)="submitAnswer()">Submit</button>
-
-  <div *ngIf="showCorrectAnswer" style="margin-top: 20px;">
-    <p>Correct Answer: {{ currentQuestion.correct_answer }}</p>
-    <button *ngIf="!isLastQuestion && showCorrectAnswer" (click)="nextQuestion()">Next Question</button>
-    <button *ngIf="isLastQuestion && showCorrectAnswer" (click)="finishGame()">Finish Game</button>
-  </div>
-</div>
+</body>

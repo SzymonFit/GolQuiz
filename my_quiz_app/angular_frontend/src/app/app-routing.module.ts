@@ -9,7 +9,6 @@ import { GameSoloComponent } from './games/game-solo/game-solo.component';
 import { GamePvpSummaryComponent } from './games/game-pvp-summary/game-pvp-summary.component';
 import { GameSoloSummaryComponent } from './games/game-solo-summary/game-solo-summary.component';
 import { MenuComponent } from './menu/menu.component';
-import { LoginComponent } from './users/login/login.component';
 import { SignupComponent } from './users/signup/signup.component';
 import { PasswordResetFormComponent } from './users/password-reset-form/password-reset-form.component';
 import { PasswordResetDoneComponent } from './users/password-reset-done/password-reset-done.component';
@@ -27,11 +26,10 @@ export const routes: Routes = [
   { path: 'game-pvp-summary/:id', component: GamePvpSummaryComponent },
   { path: 'game-solo/:id', component: GameSoloComponent },
   { path: 'game-solo-summary/:id', component: GameSoloSummaryComponent },
-  { path: 'login', component: LoginComponent },
   { path: 'accounts/signup', component: SignupComponent },
   { path: 'accounts/password/reset', component: PasswordResetFormComponent },
   { path: 'accounts/password/reset/done', component: PasswordResetDoneComponent },
-  { path: 'api/accounts/reset/:uid/:token', component: PasswordResetConfirmComponent },
+  { path: 'accounts/reset/:uid/:token', component: PasswordResetConfirmComponent },
   { path: 'accounts/password/reset/complete', component: PasswordResetCompleteComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'ranking/:mode', component: GamesRankingsListComponent },

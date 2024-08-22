@@ -1,64 +1,63 @@
-<div *ngIf="!showWaitMessage">
-  <div *ngIf="game && question">
-    <h2>{{ game.game_mode }}</h2>
-    
-    <!-- Wyświetlanie informacji o graczach -->
-    <div class="players-info">
-      <p><strong>Gracz 1:</strong> {{ game.player1.username }} - Wynik: {{ game.score_player1 }}</p>
-      <p><strong>Gracz 2:</strong> {{ game.player2?.username || 'Oczekiwanie na gracza 2...' }} - Wynik: {{ game.score_player2 }}</p>
-    </div>
+<body>
+  <div *ngIf="!showWaitMessage" class="question-container">
+    <div *ngIf="game && question">
+      <h2 *ngIf="game.game_mode === 'mode1'">Goal Hunter</h2>
+      <h2 *ngIf="game.game_mode === 'mode2'">Squad Master</h2>
+      <h2 *ngIf="game.game_mode === 'mode3'">Champion</h2>
+      
 
-    <h3>Question {{ game.questions_answered_player1 + 1 }}/10</h3>
+      <div class="logos-frame">
+        <!-- Wyświetlanie logo drużyny, jeśli jest dostępne -->
+        <div *ngIf="question.team_logo" class="logo-frame">
+          <img [src]="question.team_logo" alt="Team Logo">
+        </div>
 
-    <!-- Wyświetlanie logo drużyny, jeśli jest dostępne -->
-    <div *ngIf="question.team_logo" style="margin-bottom: 10px;">
-      <img [src]="question.team_logo" alt="Team Logo" width="100">
-    </div>
+        <!-- Wyświetlanie logo ligi, jeśli jest dostępne -->
+        <div *ngIf="question.league_logo" class="logo-frame">
+          <img [src]="question.league_logo" alt="League Logo">
+        </div>
+      </div>
 
-    <!-- Wyświetlanie logo ligi, jeśli jest dostępne -->
-    <div *ngIf="question.league_logo" style="margin-bottom: 10px;">
-      <img [src]="question.league_logo" alt="League Logo" width="100">
-    </div>
+      <!-- Wyświetlanie zdjęcia piłkarza, jeśli jest dostępne -->
+      <div *ngIf="question.player_photo" class="player-photo-frame">
+        <img [src]="question.player_photo" alt="Player Photo">
+      </div>
 
-    <!-- Wyświetlanie zdjęcia piłkarza, jeśli jest dostępne -->
-    <div *ngIf="question.player_photo" style="margin-bottom: 10px;">
-      <img [src]="question.player_photo" alt="Player Photo" width="100">
-    </div>
+      <p>{{ question.question }}</p>
 
-    <p>{{ question.question }}</p>
+      <!-- Wyświetlanie opcji odpowiedzi -->
+      <div *ngIf="question.options && question.options.length > 0; else textAnswer" class="options-container">
+        <div *ngFor="let option of question.options" class="option-tile">
+          <input 
+            type="radio" 
+            [(ngModel)]="answer" 
+            [value]="option" 
+            [id]="option">
+          <label [for]="option">{{ option }}</label>
+        </div>
+      </div>
 
-    <!-- Wyświetlanie opcji odpowiedzi -->
-    <div *ngIf="question.options && question.options.length > 0; else textAnswer">
-      <div *ngFor="let option of question.options">
-        <input 
-          type="radio" 
-          [(ngModel)]="answer" 
-          [value]="option" 
-          [id]="option">
-        <label [for]="option">{{ option }}</label><br>
+      <!-- Jeśli nie ma opcji, wyświetl pole tekstowe -->
+      <ng-template #textAnswer>
+        <input type="text" [(ngModel)]="answer" id="answer" name="answer" required>
+      </ng-template>
+
+      <!-- Komunikat o błędzie, jeśli nie wpisano odpowiedzi lub nie wybrano opcji -->
+      <div *ngIf="showError" class="error-message">
+        Please select or enter an answer before submitting.
+      </div>
+
+      <button class="submit-button" (click)="submitAnswer(answer)">Submit</button>
+
+      <div *ngIf="showCorrectAnswer" class="correct-answer">
+        <p>Correct Answer: {{ question.correct_answer }}</p>
+        <button *ngIf="!isLastQuestion && showCorrectAnswer" (click)="nextQuestion()">Next Question</button>
+        <button *ngIf="isLastQuestion && showCorrectAnswer" (click)="finishGame()">Finish Game</button>
       </div>
     </div>
-
-    <!-- Jeśli nie ma opcji, wyświetl pole tekstowe -->
-    <ng-template #textAnswer>
-      <input type="text" [(ngModel)]="answer" id="answer" name="answer" required>
-    </ng-template>
-
-    <!-- Komunikat o błędzie, jeśli nie wpisano odpowiedzi lub nie wybrano opcji -->
-    <div *ngIf="showError" style="color: red;">
-      Please select or enter an answer before submitting.
-    </div>
-
-    <button (click)="submitAnswer(answer)">Submit</button>
-
-    <div *ngIf="showCorrectAnswer" style="margin-top: 20px;">
-      <p>Correct Answer: {{ question.correct_answer }}</p>
-      <button *ngIf="!isLastQuestion && showCorrectAnswer" (click)="nextQuestion()">Next Question</button>
-      <button *ngIf="isLastQuestion && showCorrectAnswer" (click)="finishGame()">Finish Game</button>
-    </div>
   </div>
-</div>
 
-<div *ngIf="showWaitMessage">
-  <p>Czekaj na zakończenie przez drugiego gracza...</p>
-</div>
+  <div *ngIf="showWaitMessage" class="wait-message">
+    <p>Wait for other player to finish...</p>
+  </div>
+</body>

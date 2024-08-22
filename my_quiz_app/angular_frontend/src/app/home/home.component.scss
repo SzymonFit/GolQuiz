@@ -1,75 +1,105 @@
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  font-family: 'Arial', sans-serif;
+  background-color: #7AC142; /* Jasnozielone tło */
+  background-image: linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px), 
+                    linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px);
+  background-size: 50px 50px; /* Rozmiar kratki na tle */
   height: 100vh;
-  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9); /* Półprzezroczyste tło */
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px; /* Ograniczenie szerokości kontenera */
+  width: 100%;
+}
+
+h1 {
+  font-family: 'Impact', sans-serif;
+  font-size: 48px;
+  font-weight: bold;
+  color: #005400; /* Ciemniejszy zielony */
+  margin-bottom: 10px;
 }
 
 .description {
-  margin-top: 20px;
   font-size: 18px;
-  color: #333;
+  font-weight: bold;
+  color: #005400; /* Ciemniejszy zielony */
+  margin-bottom: 20px;
+  transition: opacity 0.5s ease-in-out;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.8); /* Lekko półprzezroczyste tło dla opisu */
+  border: 1px solid #005400; /* Obramowanie opisu */
+  border-radius: 5px;
+  min-height: 150px; /* Zwiększona minimalna wysokość opisu */
+  max-height: 150px; /* Maksymalna wysokość opisu, ustalona na tę samą wartość */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
+
 .login-form {
-  margin-top: 20px;
+  margin-bottom: 20px;
+}
 
-  input {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 100%;
-  }
+.login-form input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #005400;
+  border-radius: 5px;
+  font-size: 16px;
+}
 
-  button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    width: 100%;
-  }
+.login-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #005400;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+}
 
-  button:hover {
-    background-color: #0056b3;
-  }
+.login-form button:hover {
+  background-color: #003f00;
+}
+
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.auth-options button {
+  background-color: #005400;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 48%;
+}
+
+.auth-options button:hover {
+  background-color: #003f00;
 }
 
 .error-message {
   color: red;
-  margin-top: 10px;
-}
-
-.buttons {
-  margin-top: 20px;
-
-  a {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    margin: 10px;
-    text-decoration: none;
-  }
-
-  a:hover {
-    background-color: #0056b3;
-  }
+  margin-bottom: 15px;
 }

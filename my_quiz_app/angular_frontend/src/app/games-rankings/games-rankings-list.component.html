@@ -1,35 +1,38 @@
-<div class="container">
-  <h2>Ranking dla trybu {{ gameMode }}</h2>
+<body>
+  <div class="container">
+    <h2>Ranking</h2>
+    <button class="summary-button" (click)="goToMenu()">Back to menu</button>
 
-  <div class="user-position">
-    <p *ngIf="userPosition !== null">Jesteś na miejscu: {{ userPosition }}</p>
-    <p *ngIf="userPosition === null">Nie jesteś w rankingu.</p>
+    <div class="user-position">
+      <p *ngIf="userPosition !== null">Your place: {{ userPosition }}</p>
+      <p *ngIf="userPosition === null">You are not ranked</p>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" [(ngModel)]="searchText" placeholder="Search a user..." (input)="filterRankings()">
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>User</th>
+          <th>Points</th>
+          <th>Wins</th>
+          <th>Loses</th>
+          <th>Draws</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredRankings">
+          <td>{{ user.position }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user['pvp_points_' + gameMode] }}</td>
+          <td>{{ user['pvp_wins_' + gameMode] }}</td>
+          <td>{{ user['pvp_losses_' + gameMode] }}</td>
+          <td>{{ user['pvp_draws_' + gameMode] }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
-  <div class="search-bar">
-    <input type="text" [(ngModel)]="searchText" placeholder="Szukaj użytkownika..." (input)="filterRankings()">
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Miejsce</th>
-        <th>Użytkownik</th>
-        <th>Punkty</th>
-        <th>Wygrane</th>
-        <th>Przegrane</th>
-        <th>Remisy</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of filteredRankings">
-        <td>{{ user.position }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user['pvp_points_' + gameMode] }}</td>
-        <td>{{ user['pvp_wins_' + gameMode] }}</td>
-        <td>{{ user['pvp_losses_' + gameMode] }}</td>
-        <td>{{ user['pvp_draws_' + gameMode] }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+</body>

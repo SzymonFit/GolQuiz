@@ -25,6 +25,7 @@ class GameRandom(GameBase):
     score_player2 = models.IntegerField(default=0)
     questions_answered = models.IntegerField(default=0)
     points_updated = models.BooleanField(default=False)
+    result = models.CharField(max_length=255, null=True, blank=True)
     
 
     def __str__(self):

@@ -16,7 +16,7 @@ export class GamePvpSummaryComponent {
   gameId: number;
   player2Questions: any;
   result: any;
-q: any;
+q : any;
 
   constructor(
     private route: ActivatedRoute,
