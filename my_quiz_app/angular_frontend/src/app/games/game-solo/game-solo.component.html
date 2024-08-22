@@ -14,13 +14,16 @@
       <div *ngIf="currentQuestion.league_logo" class="logo-frame">
         <img [src]="currentQuestion.league_logo" alt="League Logo">
       </div>
+      <div>
+        <img *ngIf="currentQuestion.player_photo" [src]="currentQuestion.player_photo" alt="Player Photo">
+      </div>
     </div>
 
     <p>{{ currentQuestion.question }}</p>
 
     <!-- Wyświetlanie opcji odpowiedzi -->
-    <div *ngIf="currentQuestion.options && currentQuestion.options.length > 0; else textAnswer">
-      <div *ngFor="let option of currentQuestion.options">
+    <div *ngIf="currentQuestion.options && currentQuestion.options.length > 0; else textAnswer" class="options-container">
+      <div *ngFor="let option of currentQuestion.options" class="option-tile">
         <input 
           type="radio" 
           [(ngModel)]="answer" 
