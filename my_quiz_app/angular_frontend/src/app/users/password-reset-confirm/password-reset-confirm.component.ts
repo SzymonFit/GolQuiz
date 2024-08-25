@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class PasswordResetConfirmComponent implements OnInit {
   newPassword: string = '';
-  confirmPassword: string = '';  // Dodaj pole do potwierdzenia hasła
+  confirmPassword: string = '';
   uid: string | null = '';
   token: string | null = '';
 
@@ -32,7 +32,7 @@ export class PasswordResetConfirmComponent implements OnInit {
     if (this.uid && this.token && this.newPassword === this.confirmPassword) {
       this.authService.confirmResetPassword(this.uid, this.token, this.newPassword).subscribe({
         next: () => {
-          this.router.navigate(['/accounts/password/reset/complete']);  // Przeniesienie na stronę potwierdzenia
+          this.router.navigate(['/accounts/password/reset/complete']);
         },
         error: (error: any) => {
           console.error('Password reset confirm failed', error);

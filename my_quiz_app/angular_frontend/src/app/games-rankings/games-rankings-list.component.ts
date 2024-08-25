@@ -37,7 +37,7 @@ export class GamesRankingsListComponent implements OnInit {
       next: (data) => {
         this.rankings = data.users;
         this.filteredRankings = this.rankings.slice();
-        this.userPosition = data.user_position;  // Przypisanie pozycji użytkownika
+        this.userPosition = data.user_position; 
       },
       error: (err) => console.error('Failed to load rankings', err)
     });

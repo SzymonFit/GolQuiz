@@ -9,8 +9,6 @@
       <button class="menu-button" (click)="goToProfile()">Profile</button>
     </div>
   </div>
-
-  <!-- Modals -->
   <div *ngIf="currentGameMode === 'mode1'" class="modal">
     <div class="modal-content">
       <h2>Select an option</h2>
@@ -20,7 +18,6 @@
       <button class="close-button" (click)="closeModal()">Close</button>
     </div>
   </div>
-
   <div *ngIf="currentGameMode === 'mode2'" class="modal">
     <div class="modal-content">
       <h2>Select an option</h2>
@@ -30,7 +27,6 @@
       <button class="close-button" (click)="closeModal()">Close</button>
     </div>
   </div>
-
   <div *ngIf="currentGameMode === 'mode3'" class="modal">
     <div class="modal-content">
       <h2>Select an option</h2>
@@ -40,7 +36,6 @@
       <button class="close-button" (click)="closeModal()">Close</button>
     </div>
   </div>
-
   <div *ngIf="waitingForOpponent" class="modal">
     <div class="modal-content">
       <h2>Proszę czekać, czekamy na drugiego gracza...</h2>

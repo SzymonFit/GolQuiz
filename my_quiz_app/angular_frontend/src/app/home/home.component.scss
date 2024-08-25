@@ -26,22 +26,22 @@ h1 {
   font-family: 'Impact', sans-serif;
   font-size: 48px;
   font-weight: bold;
-  color: #005400; /* Ciemniejszy zielony */
+  color: #005400; 
   margin-bottom: 10px;
 }
 
 .description {
   font-size: 18px;
   font-weight: bold;
-  color: #005400; /* Ciemniejszy zielony */
+  color: #005400; 
   margin-bottom: 20px;
   transition: opacity 0.5s ease-in-out;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.8); /* Lekko półprzezroczyste tło dla opisu */
-  border: 1px solid #005400; /* Obramowanie opisu */
+  background: rgba(255, 255, 255, 0.8); 
+  border: 1px solid #005400; 
   border-radius: 5px;
-  min-height: 150px; /* Zwiększona minimalna wysokość opisu */
-  max-height: 150px; /* Maksymalna wysokość opisu, ustalona na tę samą wartość */
+  min-height: 150px; 
+  max-height: 150px; 
   display: flex;
   justify-content: center;
   align-items: center;

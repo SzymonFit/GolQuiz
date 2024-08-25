@@ -31,7 +31,7 @@ export class GameSoloComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadGameDetails(); // Wywołanie ładowania danych po inicjalizacji komponentu
+    this.loadGameDetails();
   }
 
   private getCsrfTokenFromCookie(): string | null {
@@ -47,10 +47,8 @@ export class GameSoloComponent implements OnInit {
     return null;
   }
 
-  // Nagłówki do żądań związanych z grą (z ID sesji)
   getGameHeaders(): HttpHeaders {
     const csrfToken = this.getCsrfTokenFromCookie();
-    // Logowanie wartości CSRF Tokena i Session ID
     console.log('CSRF Token:', csrfToken);
 
     let headers = new HttpHeaders().set('X-CSRFToken', csrfToken || '');
@@ -59,12 +57,10 @@ export class GameSoloComponent implements OnInit {
 
 loadGameDetails() {
   const headers = this.getGameHeaders();
-
-  // Logowanie nagłówków przed przekazaniem do serwisu
   console.log('Request headers before service call:', headers);
 
   this.gameService.getSoloGameDetails(this.gameId, { headers, withCredentials: true }).subscribe(data => {
-      console.log('Otrzymane dane:', data);  // Logowanie danych odpowiedzi
+      console.log('Otrzymane dane:', data); 
       this.game = data.game;
       this.questions = data.questions;
       this.currentQuestion = this.questions[0];
@@ -79,16 +75,16 @@ loadGameDetails() {
 
 submitAnswer() {
   if (!this.answer) {
-    this.showError = true;  // Wyświetl komunikat o błędzie, jeśli odpowiedź nie jest podana
+    this.showError = true; 
     return;
   }
 
-  const headers = this.getGameHeaders(); // Użycie nagłówków specyficznych dla gry
+  const headers = this.getGameHeaders(); 
   
   this.gameService.updateSoloGame(this.gameId, this.answer).subscribe((data: any) => {  
     this.showCorrectAnswer = true;
-    this.showError = false;  // Ukryj komunikat o błędzie
-    this.answer = '';  // Resetowanie odpowiedzi
+    this.showError = false;  
+    this.answer = ''; 
 
     if (data.message === 'Game completed') {
       this.router.navigate([`/game-solo-summary/${data.game_id}`]);

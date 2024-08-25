@@ -23,7 +23,7 @@ export class GamePvpComponent implements OnInit, OnDestroy {
   gameId: number;
   private socket$: WebSocketSubject<any>;
   private timerSubscription: Subscription | null = null;
-  timeLeft: number = 10;  // 10 seconds for each question
+  timeLeft: number = 10;  
   waitingMessage: boolean = false;
   showError: boolean = false;
   showWaitMessage = false;;
@@ -62,11 +62,8 @@ export class GamePvpComponent implements OnInit, OnDestroy {
     }
     return null;
   }
-
-  // Nagłówki do żądań związanych z grą (z ID sesji)
   getGameHeaders(): HttpHeaders {
     const csrfToken = this.getCsrfTokenFromCookie();
-    // Logowanie wartości CSRF Tokena i Session ID
     console.log('CSRF Token:', csrfToken);
 
     let headers = new HttpHeaders().set('X-CSRFToken', csrfToken || '');
@@ -74,7 +71,7 @@ export class GamePvpComponent implements OnInit, OnDestroy {
   }
 
   handleSocketMessage(message: any) {
-    console.log('Received WebSocket message:', message); // Logowanie wiadomości WebSocket
+    console.log('Received WebSocket message:', message); 
   
     if (message.message === 'opponent_joined') {
       this.waitingMessage = false;
@@ -103,28 +100,28 @@ export class GamePvpComponent implements OnInit, OnDestroy {
     this.timerSubscription = interval(1000).subscribe(() => {
       this.timeLeft--;
       if (this.timeLeft === 0) {
-        this.submitAnswer('');  // Submit empty answer if time runs out
+        this.submitAnswer(''); 
       }
     });
   }
 
   submitAnswer(answer: string) {
     if (!this.answer) {
-      this.showError = true;  // Wyświetl komunikat o błędzie, jeśli odpowiedź nie jest podana
+      this.showError = true;  
       return;
     }
   
-    const headers = this.getGameHeaders(); // Użycie nagłówków specyficznych dla gry
+    const headers = this.getGameHeaders(); 
   
     this.gameService.updateRandomGame(this.gameId, this.answer).subscribe((data: any) => {
       this.showCorrectAnswer = true;
-      this.showError = false;  // Ukryj komunikat o błędzie
-      this.answer = '';  // Resetowanie odpowiedzi
+      this.showError = false;  
+      this.answer = '';  
   
       if (data.message === 'Game ended') {
-        this.router.navigate([`/game-summary/${this.gameId}`]); // Przeniesienie na stronę podsumowania dla PvP
+        this.router.navigate([`/game-summary/${this.gameId}`]); 
       } else if (data.message === 'Czekaj na zakończenie przez drugiego gracza.') {
-        this.showWaitMessage = true;  // Wyświetl komunikat o oczekiwaniu na drugiego gracza
+        this.showWaitMessage = true;  
       } else {
         this.nextQuestion();
       }
@@ -143,14 +140,13 @@ export class GamePvpComponent implements OnInit, OnDestroy {
     this.router.navigate([`/game-pvp-summary/${this.gameId}`]);
   }
 
-  // Nowa funkcja do anulowania oczekiwania
   cancelWaiting() {
     if (this.gameId) {
       const headers = this.getGameHeaders();
 
       this.gameService.cancelRandomGame(this.gameId).subscribe((data: any) => {
         alert(data.message);
-        this.router.navigate(['/menu']);  // Powrót do menu po anulowaniu gry
+        this.router.navigate(['/menu']); 
       }, error => {
         console.error("Error during game cancellation:", error);
       });

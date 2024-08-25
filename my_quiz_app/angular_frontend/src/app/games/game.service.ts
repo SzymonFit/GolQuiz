@@ -59,7 +59,7 @@ getSoloGameDetails(gameId: number, options?: { headers?: HttpHeaders, withCreden
 
   const defaultOptions = {
       headers: headers,
-      withCredentials: true // Pozwala na automatyczne przesyłanie cookie
+      withCredentials: true
   };
 
   const finalOptions = { ...defaultOptions, ...options };

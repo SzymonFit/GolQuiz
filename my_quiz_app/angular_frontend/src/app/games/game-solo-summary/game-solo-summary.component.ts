@@ -31,6 +31,6 @@ export class GameSoloSummaryComponent {
   }
 
   goToMenu() {
-    this.router.navigate(['/menu']);  // Przekierowanie do menu
+    this.router.navigate(['/menu']); 
   }
 }

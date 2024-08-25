@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit {
   profile: UserProfile | undefined;
   error: string | undefined;
 
-  constructor(private profileService: ProfileService, private router: Router) {} // Dodaj Router do konstruktora
+  constructor(private profileService: ProfileService, private router: Router) {} 
 
   ngOnInit(): void {
     this.profileService.getProfile().subscribe({
@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit {
   logout() {
     this.profileService.logout().subscribe({
       next: () => {
-        this.router.navigate(['/']);  // Przekierowanie po wylogowaniu
+        this.router.navigate(['/']); 
       },
       error: () => {
         this.error = 'Failed to logout';
@@ -36,6 +36,6 @@ export class ProfileComponent implements OnInit {
   }
   
   goToMenu() {
-    this.router.navigate(['/menu']);  // Przekierowanie do menu
+    this.router.navigate(['/menu']);  
   }
 }

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CsrfInterceptor } from './csrf-interceptor';
-
 import { HomeComponent } from './home/home.component';
 import { GamePvpComponent } from './games/game-pvp/game-pvp.component';
 import { GameSoloComponent } from './games/game-solo/game-solo.component';

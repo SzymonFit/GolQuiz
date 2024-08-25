@@ -12,11 +12,11 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   getProfile(): Observable<UserProfile> {
-    return this.http.get<UserProfile>(this.apiUrl, { withCredentials: true });  // Używamy withCredentials
+    return this.http.get<UserProfile>(this.apiUrl, { withCredentials: true });
   }
 
   logout(): Observable<any> {
-    const csrfToken = this.getCsrfToken();  // Załóżmy, że masz metodę do pobierania tokenu CSRF
+    const csrfToken = this.getCsrfToken();
     return this.http.post('http://localhost:8000/api/accounts/logout/', {}, { 
       headers: { 'X-CSRFToken': csrfToken || '' },
       withCredentials: true 

@@ -5,8 +5,6 @@
     <h2 *ngIf="game.game_mode === 'mode3'">Champion</h2>
 
     <h3>Question {{ questions.indexOf(currentQuestion) + 1 }}/{{ questions.length }}</h3>
-
-    <!-- Sekcja z logo drużyny i ligi obok siebie -->
     <div class="logos-frame">
       <div *ngIf="currentQuestion.team_logo" class="logo-frame">
         <img [src]="currentQuestion.team_logo" alt="Team Logo">
@@ -21,7 +19,6 @@
 
     <p>{{ currentQuestion.question }}</p>
 
-    <!-- Wyświetlanie opcji odpowiedzi -->
     <div *ngIf="currentQuestion.options && currentQuestion.options.length > 0; else textAnswer" class="options-container">
       <div *ngFor="let option of currentQuestion.options" class="option-tile">
         <input 
@@ -32,13 +29,10 @@
         <label [for]="option">{{ option }}</label><br>
       </div>
     </div>
-
-    <!-- Jeśli nie ma opcji, wyświetl pole tekstowe -->
     <ng-template #textAnswer>
       <input type="text" [(ngModel)]="answer" id="answer" name="answer" required>
     </ng-template>
 
-    <!-- Komunikat o błędzie, jeśli nie wpisano odpowiedzi lub nie wybrano opcji -->
     <div *ngIf="showError" class="error-message">
       Please select or enter an answer before submitting.
     </div>

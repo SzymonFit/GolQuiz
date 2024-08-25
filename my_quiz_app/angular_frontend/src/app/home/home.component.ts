@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
   login() {
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
-        this.router.navigate(['/menu']); // Przekierowanie do menu po poprawnym logowaniu
+        this.router.navigate(['/menu']);
       },
       error: (error) => {
         this.errorMessage = 'Błędny login lub hasło. Spróbuj ponownie.';

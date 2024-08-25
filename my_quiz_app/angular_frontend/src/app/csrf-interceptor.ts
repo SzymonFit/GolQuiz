@@ -10,7 +10,7 @@ export class CsrfInterceptor implements HttpInterceptor {
 
     if (csrfToken) {
       const modifiedReq = req.clone({ 
-        withCredentials: true, // Ważne, aby przekazać cookies z CSRF
+        withCredentials: true,
         setHeaders: { 'X-CSRFToken': csrfToken }
       });
       return next.handle(modifiedReq);

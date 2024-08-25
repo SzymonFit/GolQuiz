@@ -1,9 +1,9 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #7AC142; /* Jasnozielone tło */
+  background-color: #7AC142; 
   background-image: linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px), 
                     linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px);
-  background-size: 50px 50px; /* Rozmiar kratki na tle */
+  background-size: 50px 50px; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,7 +13,7 @@ body {
 
 .question-container {
   text-align: center;
-  background: rgba(255, 255, 255, 0.9); /* Półprzezroczyste tło */
+  background: rgba(255, 255, 255, 0.9); 
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -26,7 +26,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white; /* Biała ramka */
+  background-color: white;
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
@@ -34,8 +34,8 @@ body {
 }
 
 .logo-frame {
-  width: 120px; /* Stała szerokość obrazków */
-  height: 120px; /* Stała wysokość obrazków */
+  width: 120px; 
+  height: 120px; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,7 +65,7 @@ body {
 
 .options-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Dwie kolumny */
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-top: 20px;
 }

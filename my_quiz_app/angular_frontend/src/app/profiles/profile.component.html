@@ -6,9 +6,7 @@
     <p><strong>Email:</strong> {{ profile.user.email }}</p>
     <p><strong>Games played:</strong> {{ profile.total_games }}</p>
   </div>
-
   <div class="games-stats">
-    <!-- Kolumna dla Solo Games -->
     <div class="games-column">
       <h3>Solo Games</h3>
       <p><strong>Played:</strong> {{ profile.solo_games_played }}</p>
@@ -16,8 +14,6 @@
       <p><strong>Squad Master points:</strong> {{ profile.solo_points_mode2 }}</p>
       <p><strong>Champion points:</strong> {{ profile.solo_points_mode3 }}</p>
     </div>
-
-    <!-- Kolumna dla PvP Goal Hunter -->
     <div class="games-column">
       <h3>Goal Hunter (PvP)</h3>
       <p><strong>Wins:</strong> {{ profile.pvp_wins_mode1 }}</p>
@@ -25,8 +21,6 @@
       <p><strong>Draws:</strong> {{ profile.pvp_draws_mode1 }}</p>
       <p><strong>Points:</strong> {{ profile.pvp_points_mode1 }}</p>
     </div>
-
-    <!-- Kolumna dla PvP Squad Master -->
     <div class="games-column">
       <h3>Squad Master (PvP)</h3>
       <p><strong>Wins:</strong> {{ profile.pvp_wins_mode2 }}</p>
@@ -34,8 +28,6 @@
       <p><strong>Draws:</strong> {{ profile.pvp_draws_mode2 }}</p>
       <p><strong>Points:</strong> {{ profile.pvp_points_mode2 }}</p>
     </div>
-
-    <!-- Kolumna dla PvP Champion -->
     <div class="games-column">
       <h3>Champion (PvP)</h3>
       <p><strong>Wins:</strong> {{ profile.pvp_wins_mode3 }}</p>
@@ -44,7 +36,6 @@
       <p><strong>Points:</strong> {{ profile.pvp_points_mode3 }}</p>
     </div>
   </div>
-
   <div class="button-container">
     <button class="button" (click)="logout()">Wyloguj się</button>
     <button class="button" (click)="goToMenu()">Wróć do menu</button>

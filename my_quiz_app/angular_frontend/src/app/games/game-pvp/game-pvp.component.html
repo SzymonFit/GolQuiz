@@ -7,25 +7,20 @@
       
 
       <div class="logos-frame">
-        <!-- Wyświetlanie logo drużyny, jeśli jest dostępne -->
         <div *ngIf="question.team_logo" class="logo-frame">
           <img [src]="question.team_logo" alt="Team Logo">
         </div>
 
-        <!-- Wyświetlanie logo ligi, jeśli jest dostępne -->
         <div *ngIf="question.league_logo" class="logo-frame">
           <img [src]="question.league_logo" alt="League Logo">
         </div>
       </div>
-
-      <!-- Wyświetlanie zdjęcia piłkarza, jeśli jest dostępne -->
       <div *ngIf="question.player_photo" class="player-photo-frame">
         <img [src]="question.player_photo" alt="Player Photo">
       </div>
 
       <p>{{ question.question }}</p>
 
-      <!-- Wyświetlanie opcji odpowiedzi -->
       <div *ngIf="question.options && question.options.length > 0; else textAnswer" class="options-container">
         <div *ngFor="let option of question.options" class="option-tile">
           <input 
