@@ -2,16 +2,18 @@
 
 GolQuiz is a quiz application built with Django for the backend and Angular for the frontend. This project allows users to participate in quizzes, view rankings, and manage their profiles. Players can choose whether to play solo or play vs another user.
 
+The project was a part of bachelor thesis.
+
 ## Features
 
 ### Home Page
-![Home Page](gifs\AngularFrontend-GoogleChrome2024-11-1419-10-03-ezgif.com-video-to-gif-converter.gif)
+![Home Page](gifs/AngularFrontend-GoogleChrome2024-11-1419-10-03-ezgif.com-video-to-gif-converter.gif)
 
 ### Menu and games
-![User Profile](gifs\AngularFrontend-GoogleChrome2024-11-1419-15-20-ezgif.com-video-to-gif-converter.gif)
+![User Profile](gifs/AngularFrontend-GoogleChrome2024-11-1419-15-20-ezgif.com-video-to-gif-converter.gif)
 
 ### Rankings and profile
-![Rankings](gifs\AngularFrontend-GoogleChrome2024-11-1419-17-59-ezgif.com-video-to-gif-converter.gif)
+![Rankings](gifs/AngularFrontend-GoogleChrome2024-11-1419-17-59-ezgif.com-video-to-gif-converter.gif)
 
 ## Prerequisites
 
