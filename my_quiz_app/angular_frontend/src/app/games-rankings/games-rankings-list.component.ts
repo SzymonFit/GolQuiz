@@ -47,7 +47,7 @@ export class GamesRankingsListComponent implements OnInit {
 
   filterRankings(): void {
     if (!this.rankings || this.rankings.length === 0) {
-      return;  // Zakończ jeśli dane jeszcze nie zostały załadowane
+      return; 
     }
   
     if (this.searchText) {
@@ -55,7 +55,7 @@ export class GamesRankingsListComponent implements OnInit {
         user.username.toLowerCase().includes(this.searchText.toLowerCase())
       );
     } else {
-      this.filteredRankings = this.rankings.slice();  // Skopiuj pełną listę
+      this.filteredRankings = this.rankings.slice(); 
     }
   }
   

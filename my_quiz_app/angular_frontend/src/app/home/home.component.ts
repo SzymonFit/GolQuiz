@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
         this.router.navigate(['/menu']);
       },
       error: (error) => {
-        this.errorMessage = 'Błędny login lub hasło. Spróbuj ponownie.';
+        this.errorMessage = 'Incorrect login or password. Please try again.';
       }
     });
   }

@@ -63,8 +63,6 @@ getSoloGameDetails(gameId: number, options?: { headers?: HttpHeaders, withCreden
   };
 
   const finalOptions = { ...defaultOptions, ...options };
-
-  // Logowanie finalnych opcji
   console.log('Final Options in getSoloGameDetails:', finalOptions);
 
   return this.http.get(`${this.apiUrl}solo/${gameId}/`, finalOptions);

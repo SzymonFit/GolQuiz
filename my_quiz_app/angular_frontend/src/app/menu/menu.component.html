@@ -1,5 +1,5 @@
 <body>
-  <h1>Gol Quiz - test your skills!</h1>
+  <h1>GolQuiz - test your skills!</h1>
   <div class="container menu-container">
     <h2>Menu</h2>
     <div class="menu-buttons">
@@ -38,7 +38,7 @@
   </div>
   <div *ngIf="waitingForOpponent" class="modal">
     <div class="modal-content">
-      <h2>Proszę czekać, czekamy na drugiego gracza...</h2>
+      <h2>Please wait, we are waiting for the other player....</h2>
       <p *ngIf="currentGameId">Game ID: {{ currentGameId }}</p>
       <button class="close-button" (click)="cancelWaiting()">Close</button>
     </div>

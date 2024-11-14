@@ -25,7 +25,7 @@ export class SignupComponent {
         this.router.navigate(['/menu']); // Przekierowanie po rejestracji
       },
       error: (error) => {
-        this.errorMessage = 'Rejestracja nie powiodła się. Spróbuj ponownie.';
+        this.errorMessage = 'Registration failed. Please try again.';
       }
     });
   }
